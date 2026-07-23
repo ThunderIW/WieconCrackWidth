@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="514" viewBox="0 0 880 514" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img" aria-label="Architecture flow. Manual input in main_niceGUI.py (NiceGUI UI in a pywebview native window) and a CSV import both feed the shared core collect_inputs_and_run_calculation(), which calls the UI-independent calculation engine WieconTools/crack_width_formula.py (crack_analyze().run() returning report_result, per EN 1992-1-1 cl. 7.3.4). Results persist through InteractionFile.py and SQLModel to a SQLite database, and export to PDF via fpdf2 to the Downloads folder.">
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L6.5,3 L0,6 Z" fill="#64748b"/></marker>
+  </defs>
+
+  <!-- panel -->
+  <rect x="0.5" y="0.5" width="879" height="513" rx="18" fill="#0f172a" stroke="#1e293b"/>
+
+  <!-- header -->
+  <text x="30" y="52" fill="#f8fafc" font-size="26" font-weight="700" letter-spacing="0.5">Architecture</text>
+  <text x="30" y="76" fill="#94a3b8" font-size="13">How a calculation flows from input to storage</text>
+
+  <!-- connectors -->
+  <line x1="440" y1="172" x2="440" y2="194" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="440" y1="272" x2="440" y2="294" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="440" y1="380" x2="440" y2="402" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="208" y1="234" x2="236" y2="234" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="642" y1="338" x2="670" y2="338" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Presentation -->
+  <g>
+    <rect x="240" y="92" width="400" height="80" rx="12" fill="#1e293b" stroke="#334155"/>
+    <rect x="256" y="108" width="5" height="48" rx="2.5" fill="#3b82f6"/>
+    <text x="272" y="115" fill="#94a3b8" font-size="11" font-weight="600" letter-spacing="1">PRESENTATION</text>
+    <text x="272" y="139" fill="#f1f5f9" font-size="18" font-weight="700">main_niceGUI.py</text>
+    <text x="272" y="159" fill="#94a3b8" font-size="11.5">NiceGUI UI in a pywebview native window</text>
+  </g>
+
+  <!-- CSV import (left branch) -->
+  <g>
+    <rect x="30" y="196" width="178" height="76" rx="12" fill="#1e293b" stroke="#334155"/>
+    <rect x="46" y="212" width="5" height="44" rx="2.5" fill="#f59e0b"/>
+    <text x="62" y="220" fill="#94a3b8" font-size="11" font-weight="600" letter-spacing="1">IMPORT</text>
+    <text x="62" y="244" fill="#f1f5f9" font-size="16" font-weight="700">CSV import</text>
+    <text x="62" y="263" fill="#94a3b8" font-size="11">batch of cases</text>
+  </g>
+
+  <!-- Shared core -->
+  <g>
+    <rect x="240" y="196" width="400" height="76" rx="12" fill="#1e293b" stroke="#334155"/>
+    <rect x="256" y="212" width="5" height="44" rx="2.5" fill="#14b8a6"/>
+    <text x="272" y="220" fill="#94a3b8" font-size="11" font-weight="600" letter-spacing="1">SHARED CORE</text>
+    <text x="272" y="244" fill="#f1f5f9" font-size="16" font-weight="700">collect_inputs_and_run_calculation()</text>
+    <text x="272" y="263" fill="#94a3b8" font-size="11">one input dict &#8594; constructor args + N, M, w_max</text>
+  </g>
+
+  <!-- Engine -->
+  <g>
+    <rect x="240" y="296" width="400" height="84" rx="12" fill="#1e293b" stroke="#334155"/>
+    <rect x="256" y="312" width="5" height="52" rx="2.5" fill="#8b5cf6"/>
+    <text x="272" y="319" fill="#94a3b8" font-size="11" font-weight="600" letter-spacing="1">CALCULATION ENGINE</text>
+    <text x="272" y="342" fill="#f1f5f9" font-size="15.5" font-weight="700">WieconTools/crack_width_formula.py</text>
+    <text x="272" y="360" fill="#94a3b8" font-size="11">crack_analyze(...).run() &#8594; report_result</text>
+    <text x="272" y="375" fill="#64748b" font-size="11">EN 1992-1-1 cl. 7.3.4 &#183; UI-independent</text>
+  </g>
+
+  <!-- PDF export (right branch) -->
+  <g>
+    <rect x="672" y="296" width="178" height="84" rx="12" fill="#1e293b" stroke="#334155"/>
+    <rect x="688" y="312" width="5" height="52" rx="2.5" fill="#ef4444"/>
+    <text x="704" y="319" fill="#94a3b8" font-size="11" font-weight="600" letter-spacing="1">REPORTS</text>
+    <text x="704" y="342" fill="#f1f5f9" font-size="16" font-weight="700">PDF export</text>
+    <text x="704" y="360" fill="#94a3b8" font-size="11">fpdf2 &#8594; Downloads</text>
+    <text x="704" y="375" fill="#64748b" font-size="11">one page per file</text>
+  </g>
+
+  <!-- Persistence -->
+  <g>
+    <rect x="240" y="404" width="400" height="80" rx="12" fill="#1e293b" stroke="#334155"/>
+    <rect x="256" y="420" width="5" height="48" rx="2.5" fill="#ec4899"/>
+    <text x="272" y="427" fill="#94a3b8" font-size="11" font-weight="600" letter-spacing="1">PERSISTENCE</text>
+    <text x="272" y="451" fill="#f1f5f9" font-size="16" font-weight="700">InteractionFile.py &#8594; SQLModel</text>
+    <text x="272" y="470" fill="#94a3b8" font-size="11">SQLite &#183; WieconDatabaseResult.db (portable, in data/)</text>
+  </g>
+</svg>

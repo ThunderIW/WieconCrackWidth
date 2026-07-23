@@ -88,26 +88,7 @@ A short walkthrough of the app in action — **click to watch on YouTube**:
 
 ## Project structure
 
-```
-Crack_width_application/
-├── main_niceGUI.py              # NiceGUI app: UI, live result + save flow, saved-files grid, PDF export
-├── WieconTools/
-│   └── crack_width_formula.py   # Calculation engine: crack_analyze(...).run() -> report_result
-├── DatabaseInteractionTools/
-│   └── InteractionFile.py       # CRUD wrapper over the results table
-├── models/
-│   └── models.py                # SQLModel table (CrackWidthResultTable) + DB engine
-├── tests/
-│   └── test_creep.py            # Engine regression suite (pytest): pins the benchmark
-├── docs/                        # Logos, reference image, screenshots, generated user-guide PDF,
-│                                #   technical briefing (architecture / verification / defects)
-├── build_user_guide.py          # Generates the user-guide PDF from docs/screenshots (fpdf2)
-├── CrackWidthNiceGUI.spec       # PyInstaller build spec (windowed, icon, bundles docs/)
-├── CHANGELOG.md                 # Release history (shipped beside the .exe)
-├── README.md                    # This file — project overview
-├── pyproject.toml / uv.lock     # Dependencies (managed with uv)
-└── database/                    # Local SQLite DB in dev (next to the .exe when packaged)
-```
+![Architecture flow: manual input in main_niceGUI.py (NiceGUI + pywebview) and CSV import both feed the shared core collect_inputs_and_run_calculation(), which calls the UI-independent engine WieconTools/crack_width_formula.py (EN 1992-1-1 cl. 7.3.4); results persist via InteractionFile.py and SQLModel to SQLite, and export to PDF via fpdf2](docs/architecture.svg)
 
 ---
 
