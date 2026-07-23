@@ -14,9 +14,9 @@ A short walkthrough of the app in action:
 
 <!-- GitHub renders this as an inline player once the repository exists.
      Replace <OWNER>/<REPO> with your GitHub path (and `main` if your default branch differs). -->
-<video src="https://github.com/<OWNER>/<REPO>/raw/main/docs/videos/Video_mode.mp4" controls width="100%"></video>
+<video src="https://github.com/<OWNER>/<REPO>/raw/main/docs/videos/7-21-2026_VERSION_2.1.7.mp4" controls width="100%"></video>
 
-▶ Or open it directly: [`docs/videos/Video_mode.mp4`](docs/videos/Video_mode.mp4)
+▶ Or open it directly: [`docs/videos/7-21-2026_VERSION_2.1.7.mp4`](docs/videos/7-21-2026_VERSION_2.1.7.mp4)
 
 ---
 
@@ -42,7 +42,7 @@ A short walkthrough of the app in action:
 
 | Within the limit | Over the limit |
 |---|---|
-| ![Green result badge reading w_k = 0.288 mm is less than or equal to w_max = 0.300 mm, Okay](docs/screenshots/02_2-pill_pass.png) | ![Red result badge reading w_k = 0.678 mm is greater than w_max = 0.300 mm, Not Okay](docs/screenshots/02_1-pill_fail.png) |
+| ![Green result badge reading w_k = 0.288 mm is less than or equal to w_max = 0.300 mm, Okay](docs/screenshots/02_2-pill-pass.png) | ![Red result badge reading w_k = 0.678 mm is greater than w_max = 0.300 mm, Not Okay](docs/screenshots/02_1-pill-fail.png) |
 
 **Save dialog** — the verdict is repeated for confirmation before the check is named and stored:
 
@@ -60,9 +60,25 @@ A short walkthrough of the app in action:
 
 | Light mode (default) | Dark mode |
 |---|---|
-| ![The app in light mode, showing the summary of inputs, result badge and saved files table](docs/screenshots/05-light_mode.png) | ![The same view in dark mode](docs/screenshots/06-dark_mode.png) |
+| ![The app in light mode, showing the summary of inputs, result badge and saved files table](docs/screenshots/05-light-mode.png) | ![The same view in dark mode](docs/screenshots/06-dark-mode.png) |
 
 <sub>Fullscreen: press <kbd>f</kbd>.</sub>
+
+**Bulk import & template** — download the CSV/Excel template, then upload multiple crack cases at once:
+
+| Download the import template | Upload dialog |
+|---|---|
+| ![Import menu with a download-template option](docs/screenshots/11-import-download.png) | ![Upload dialog for importing crack cases from a file](docs/screenshots/12-upload-dialog.png) |
+
+**Settings** — configure defaults; saved settings are reloaded on the next launch:
+
+| Settings dialog | Settings reloaded on start |
+|---|---|
+| ![Settings dialog with configurable defaults](docs/screenshots/07-settings.png) | ![Confirmation that saved settings were loaded](docs/screenshots/08-settings-loads.png) |
+
+**Built-in help** — an illustrated help dialog is available in-app:
+
+![In-app help dialog explaining the inputs and workflow](docs/screenshots/09-help-dialog.png)
 
 ---
 
