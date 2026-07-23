@@ -1,110 +1,197 @@
 # Crack Width Calculator (Wiecon)
 
-Calculates the characteristic crack width `w_k` of a reinforced concrete section to **EN 1992-1-1 cl. 7.3.4** and checks it against a limit.
+A desktop application that calculates the characteristic crack width **`w_k`** of a reinforced-concrete section to **EN 1992-1-1 cl. 7.3.4** and checks it against an allowable limit.
+
+Built with [NiceGUI](https://nicegui.io/) + [pywebview](https://pywebview.flowrl.com/) as a native, portable Windows app — results are stored in a local SQLite database and can be exported to PDF.
+
+> Illustrated end-user instructions ship with the app as `docs/CrackWidth_User_Guide.pdf`.
 
 ---
 
-## 1. Launching the app
+## Demo
 
-Double-click **`CrackWidthNiceGUI.exe`**. The application opens in its own window — no installation is required.
+A short walkthrough of the app in action:
 
-> The `_internal` folder next to the `.exe` is required. Keep the whole `CrackWidthNiceGUI` folder together; do not move the `.exe` out on its own.
+<video src="https://github.com/ThunderIW/WieconCrackWidth/raw/main/docs/videos/7-21-2026_VERSION_2.1.7.mp4" controls width="100%"></video>
 
-Two documents sit beside the `.exe`:
+▶ Or open it directly: [`docs/videos/7-21-2026_VERSION_2.1.7.mp4`](docs/videos/7-21-2026_VERSION_2.1.7.mp4)
 
-| File | What it is |
+---
+
+## Features
+
+- **Crack-width check to EN 1992-1-1 cl. 7.3.4** — computes `w_k`, steel stress `σ_s`, crack spacing `s_r,max`, effective reinforcement ratio `ρ_p,eff`, and a PASS/FAIL verdict against `w_max`.
+- **Live result, no Calculate button** — the check re-runs as you type (~164 µs, so it is imperceptible) and a colour-coded badge shows the verdict as a full comparison: `w_k = 0.678 mm > w_max = 0.300 mm (Not Okay)`.
+- **Guided input** — grouped panels for Geometry, Reinforcement, Materials and Loads, with a live summary of inputs.
+- **Save & manage results** — name and store each check in a local database; browse, view details, and delete from an AG Grid table.
+- **PDF export** — one report page per saved file (via `fpdf2`), written to the user's Downloads folder.
+- **Native, portable** — runs in its own window; the database travels next to the executable, so the whole folder works from a USB stick.
+- **Quality-of-life** — light/dark theme toggle, fullscreen (`f`), and a bundled illustrated user guide.
+
+---
+
+## Screenshots
+
+| Input panels & live values | Saved files (colour-coded PASS / FAIL) |
 |---|---|
-| `CrackWidth_User_Guide.pdf` | This guide, illustrated with screenshots. |
-| `CHANGELOG.md` | What changed in each release. |
+| ![Input panels with section, reinforcement and material values](docs/screenshots/01-input-form.png) | ![Saved files table with a green PASS row and a red FAIL row](docs/screenshots/03-saved-files.png) |
 
-The app is **portable**: your saved results live in a `data` folder created next to the `.exe` on first run, so copying the folder — to a USB stick, or another PC — takes your saved files with it.
+**Live result badge** — recalculates as you type; no Calculate button:
 
----
-
-## 2. Step-by-step workflow
-
-1. **Fill in the four input panels** — Geometry, Reinforcement, Materials, Loads. Click a panel header to expand it.
-
-2. **Review the "📋 Summary of inputs"** below the panels to confirm your values at a glance.
-
-3. **Watch the "🧮 Result" badge** — it recalculates as you type, so there is no Calculate button. It reads:
-
-   `w_k = 0.288 mm ≤ w_max = 0.300 mm (Okay)` on green (within the limit), or
-   `w_k = 0.678 mm > w_max = 0.300 mm (Not Okay)` on red (exceeds it).
-
-   It shows a grey **—** while any field is still empty or half-typed.
-
-4. **Save the result:** click **Save File**, type a **File name**, then click **Save** (or press **Enter**). The dialog repeats the verdict so you can confirm before saving.
-
-5. **Manage saved files** in the **📁 Saved Files** table:
-   - **View More Detail** — open a read-only detail view of the selected file(s).
-   - **Delete File** — delete the ticked rows. **Delete All Files** — clear the whole table.
-
-6. **Export to PDF:** in the detail view, click the **PDF** icon to export the report (one page per file). PDFs are saved to your **Downloads** folder.
-
----
-
-## 3. Importing multiple cases at once
-
-To run a batch of cases without typing each one, use the **Import and Download** button (beside **Reference Image**). It expands to two actions:
-
-1. **Download the template** — a `.csv` with one column per input field. Enter one case per row, then save the file.
-2. **Upload the file** — choose your `.csv`; each row is calculated and stored as a saved case, added to the **📁 Saved Files** table. A progress bar tracks the import and a message confirms how many cases were added.
-
-> Only `.csv` files are accepted. Download the template first if you are unsure of the expected columns.
-
----
-
-## 4. Handy controls
-
-| Control | What it does |
+| Within the limit | Over the limit |
 |---|---|
-| **Dark-mode toggle** (round button, bottom-right) | Switches the whole app between light and dark themes. The icon shows the mode you are **in** — a sun in light mode, a moon in dark mode — not the one you will switch to. |
-| Press **`f`** | Toggles fullscreen. |
-| **Credits** (header, top-right) | Shows the app info and the standard reference. |
+| ![Green result badge reading w_k = 0.288 mm is less than or equal to w_max = 0.300 mm, Okay](docs/screenshots/02_2-pill-pass.png) | ![Red result badge reading w_k = 0.678 mm is greater than w_max = 0.300 mm, Not Okay](docs/screenshots/02_1-pill-fail.png) |
+
+**Save dialog** — the verdict is repeated for confirmation before the check is named and stored:
+
+| PASS (w_k ≤ limit) | FAIL (w_k > limit) |
+|---|---|
+| ![Green PASS save dialog, w_k = 0.209 mm](docs/screenshots/02-result-pass.png) | ![Red FAIL save dialog, w_k = 0.678 mm](docs/screenshots/02-result-fail.png) |
+
+**Detail view & PDF export** — expandable inputs/results with a one-click PDF report:
+
+| PASS detail | FAIL detail |
+|---|---|
+| ![Detail view of a passing result, 30% below limit](docs/screenshots/04-detail-pass.png) | ![Detail view of a failing result, exceeds limit by 126%](docs/screenshots/04-detail-fail.png) |
+
+**Light & dark themes** — toggled with the round button, bottom-right; the icon shows the mode you are in:
+
+| Light mode (default) | Dark mode |
+|---|---|
+| ![The app in light mode, showing the summary of inputs, result badge and saved files table](docs/screenshots/05-light-mode.png) | ![The same view in dark mode](docs/screenshots/06-dark-mode.png) |
+
+<sub>Fullscreen: press <kbd>f</kbd>.</sub>
+
+**Bulk import & template** — download the CSV/Excel template, then upload multiple crack cases at once:
+
+| Download the import template | Upload dialog |
+|---|---|
+| ![Import menu with a download-template option](docs/screenshots/11-import-download.png) | ![Upload dialog for importing crack cases from a file](docs/screenshots/12-upload-dialog.png) |
+
+**Settings** — configure defaults; saved settings are reloaded on the next launch:
+
+| Settings dialog | Settings reloaded on start |
+|---|---|
+| ![Settings dialog with configurable defaults](docs/screenshots/07-settings.png) | ![Confirmation that saved settings were loaded](docs/screenshots/08-settings-loads.png) |
+
+**Built-in help** — an illustrated help dialog is available in-app:
+
+![In-app help dialog explaining the inputs and workflow](docs/screenshots/09-help-dialog.png)
 
 ---
 
-## 5. Input field reference
+## Tech stack
 
-### Geometry
-| Field | Meaning | Unit | Default |
-|---|---|---|---|
-| Section width **b** | Width of the section. | mm | 1000 |
-| Section thickness **h** | Overall depth/thickness. | mm | 525 |
-| Cover to bar surface **c** | Clear cover to the bar surface. | mm | 40 |
+| Area | Library |
+|---|---|
+| UI | NiceGUI |
+| Native window | pywebview |
+| Data / ORM | SQLModel (SQLite) |
+| PDF export | fpdf2 |
+| Dates | pendulum |
+| Packaging | PyInstaller |
+| Env / deps | uv (`pyproject.toml` + `uv.lock`) |
 
-### Reinforcement
-| Field | Meaning | Unit | Default |
-|---|---|---|---|
-| Tension face bar **Ø** | Bar diameter on the tension face. | mm | 16 |
-| Tension face bar spacing | Centre-to-centre spacing, tension face. | mm | 150 |
-| Opposite face bar **Ø** | Bar diameter on the opposite face. | mm | 20 |
-| Opposite face bar spacing | Centre-to-centre spacing, opposite face. | mm | 150 |
-| Bar type | `ribbed` (high bond) or `plain`. | — | ribbed |
-
-### Materials
-| Field | Meaning | Unit | Default |
-|---|---|---|---|
-| Concrete strength **f_ck** | Characteristic cylinder strength. | MPa | 50 |
-| Concrete modulus **E_c** | Elastic modulus; **0 = auto** (derived from f_ck). | GPa | 34 |
-| Steel modulus **E_s** | Elastic modulus of reinforcement. | GPa | 200 |
-| Creep coefficient **φ** | Creep coefficient for long-term effects. | — | 0 |
-
-### Loads
-| Field | Meaning | Unit | Default |
-|---|---|---|---|
-| Axial force **N** | Axial force; **tension is positive (+)**. | kN | 529 |
-| Bending moment **M** | Applied bending moment. | kNm | 116 |
-| Crack width limit **w_max** | Allowable crack width the result is checked against. | mm | 0.30 |
-| Load duration | `long` (sustained) or `short` (instantaneous). | — | long |
+Requires **Python ≥ 3.12**.
 
 ---
 
-## 6. Notes
+## Project structure
 
-- A blank numeric field reads as empty (`—`). The Result badge simply shows `—` until every field is filled; if you click **Save File** with one missing, the app names the value it needs.
-- The Result badge updates shortly after you stop typing, not on every keystroke — so a half-typed number never flashes a misleading verdict.
-- Results are stored in a local database and reload automatically the next time you open the app.
+```
+Crack_width_application/
+├── main_niceGUI.py              # NiceGUI app: UI, live result + save flow, saved-files grid, PDF export
+├── WieconTools/
+│   └── crack_width_formula.py   # Calculation engine: crack_analyze(...).run() -> report_result
+├── DatabaseInteractionTools/
+│   └── InteractionFile.py       # CRUD wrapper over the results table
+├── models/
+│   └── models.py                # SQLModel table (CrackWidthResultTable) + DB engine
+├── tests/
+│   └── test_creep.py            # Engine regression suite (pytest): pins the benchmark
+├── docs/                        # Logos, reference image, screenshots, generated user-guide PDF,
+│                                #   technical briefing (architecture / verification / defects)
+├── build_user_guide.py          # Generates the user-guide PDF from docs/screenshots (fpdf2)
+├── CrackWidthNiceGUI.spec       # PyInstaller build spec (windowed, icon, bundles docs/)
+├── CHANGELOG.md                 # Release history (shipped beside the .exe)
+├── README.md                    # This file — project overview
+├── pyproject.toml / uv.lock     # Dependencies (managed with uv)
+└── database/                    # Local SQLite DB in dev (next to the .exe when packaged)
+```
 
-*Crack Width Calculator · Wiecon — EN 1992-1-1 cl. 7.3.4*
+---
+
+## Getting started (development)
+
+This project uses [uv](https://docs.astral.sh/uv/).
+
+```bash
+# 1. Install dependencies into a virtual environment
+uv sync
+
+# 2. Run the app in dev mode (opens a browser tab at http://localhost:8082, with live reload)
+uv run python main_niceGUI.py
+
+# 3. Run the engine's regression suite
+uv run pytest
+```
+
+In development the app runs in the browser with auto-reload; when packaged it runs `native=True` in its own window with reload disabled.
+
+---
+
+## Building the Windows executable
+
+Packaging is done with PyInstaller using the provided spec (windowed, custom icon, `docs/` bundled):
+
+```bash
+uv run pyinstaller CrackWidthNiceGUI.spec --distpath dist/
+```
+
+- Output: `dist/CrackWidthNiceGUI/CrackWidthNiceGUI.exe` (one-dir build — keep the whole folder together).
+- The exe launches windowed (no console) and uses `docs/Wiecon_logo.ico` as its icon.
+- If you change the icon file but not its path, add `--clean` so PyInstaller regenerates the cached icon resource.
+
+### Regenerating the user guide
+
+```bash
+uv run python build_user_guide.py   # writes docs/CrackWidth_User_Guide.pdf
+```
+
+The PDF lives in `docs/`, so it is automatically bundled into the next build.
+
+---
+
+## How it works
+
+The engine in `WieconTools/crack_width_formula.py` is UI-independent:
+
+```python
+from WieconTools.crack_width_formula import crack_analyze
+
+result = crack_analyze(
+    section_width=1000, section_thickness=525, cover_to_bar_surface=40,
+    tension_face_bar_diameter=16, tension_face_bar_spacing=150,
+    opposite_face_bar_diameter=20, opposite_face_bar_spacing=150,
+    concrete_strength=50, concrete_modulus=34, steel_modulus=200,
+    creep_coeff=0.0, bar_type="ribbed", load_duration="long",
+).run(N_kN=529, M_kNm=116, w_max=0.30)
+
+print(result.wk, result.ok, result.mode)   # crack width, pass/fail, N+M vs pure-tension
+```
+
+`run()` returns a `report_result` dataclass with every intermediate quantity of the cl. 7.3.4 check.
+
+In the UI, `collect_inputs_and_run_calculation(values)` is the single shared core: it splits one input dict into the constructor arguments and the three load arguments (`N_kN`, `M_kNm`, `w_max`), then runs the check. It holds no UI and catches nothing — it raises, and each caller picks its own policy. The live badge swallows failures into a grey `—` (a half-typed value is an ordinary state, not an error), while the save path reports them in a notification. Nothing is cached: the result is always derived from the inputs at the moment it is used, so a stored row's inputs and outputs can never disagree.
+
+Saving persists inputs + selected outputs via `DatabaseInteractionTools/InteractionFile.py`.
+
+### Data storage
+
+Results are stored in a SQLite database (`WieconDatabaseResult.db`) defined by `CrackWidthResultTable` in `models/models.py`. To stay portable, a packaged build keeps the database in a `data/` folder **next to the executable** (not in the temp unpack dir), so saved files persist and travel with the app.
+
+---
+
+## License
+
+Proprietary — © Wiecon. All rights reserved. _(Update this section with your intended license.)_
