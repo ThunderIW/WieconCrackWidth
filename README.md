@@ -10,11 +10,11 @@ Built with [NiceGUI](https://nicegui.io/) + [pywebview](https://pywebview.flowrl
 
 ## Demo
 
-A short walkthrough of the app in action:
+A short walkthrough of the app in action — **click the image to play the video** (opens in the browser):
 
-<video src="https://github.com/ThunderIW/WieconCrackWidth/raw/main/docs/videos/7-21-2026_VERSION_2.1.7.mp4" controls width="100%"></video>
+[![▶ Watch the Crack Width Calculator demo](docs/screenshots/05-light-mode.png)](https://github.com/ThunderIW/WieconCrackWidth/raw/main/docs/videos/7-21-2026_VERSION_2.1.7.mp4)
 
-▶ Or open it directly: [`docs/videos/7-21-2026_VERSION_2.1.7.mp4`](docs/videos/7-21-2026_VERSION_2.1.7.mp4)
+▶ Or open it directly: [`docs/videos/7-21-2026_VERSION_2.1.7.mp4`](https://github.com/ThunderIW/WieconCrackWidth/raw/main/docs/videos/7-21-2026_VERSION_2.1.7.mp4)
 
 ---
 
