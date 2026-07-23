@@ -194,6 +194,27 @@ Results are stored in a SQLite database (`WieconDatabaseResult.db`) defined by `
 
 ---
 
+## Changelog
+
+Full release history is in [`CHANGELOG.md`](CHANGELOG.md).
+
+<details>
+<summary><strong>Latest — v2.1.7 (2026-07-21)</strong></summary>
+
+- **Bulk import from a `.csv` file** — the Import and Download button calculates and
+  saves every row as a case, with a progress bar and a confirmation of how many cases
+  were added.
+- **Downloadable blank template** — a template `.csv` showing the exact columns an
+  import expects; fill one row per case and upload it back.
+- **Help & user guide** updated with the new import workflow (with screenshots).
+
+_Results are unaffected — imported cases run through the same EN 1992-1-1 engine as
+hand-entered cases._
+
+</details>
+
+---
+
 ## License
 
 Proprietary — © Wiecon. All rights reserved. _(Update this section with your intended license.)_
