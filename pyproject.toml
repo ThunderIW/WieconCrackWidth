@@ -1,0 +1,27 @@
+[project]
+name = "crack-width-application"
+version = "2.1.3"
+requires-python = ">=3.12"
+dependencies = [
+    "fastexcel>=0.20.2",
+    "fpdf2>=2.8.7",
+    "nicegui>=3.14.0",
+    "nicegui-extras>=0.2",
+    "nicegui-pdf>=0.0.7",
+    "pendulum>=3.2.0",
+    "polars>=1.43.0",
+    "pywebview>=6.2.1",
+    "sqlmodel>=0.0.39",
+]
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.21.0",
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+# The app is a flat project, not an installed package, so the root has to be on
+# sys.path for `from WieconTools...` to resolve from inside tests/.
+pythonpath = ["."]
+testpaths = ["tests"]

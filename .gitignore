@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Virtual environment
+.venv/
+venv/
+
+# Build / packaging output
+build/
+dist/
+*.spec.bak
+build_*.log
+
+# NiceGUI runtime
+.nicegui/
+
+# IDE
+.idea/
+
+# Databases / runtime data
+database/*.db
+upload_data/*
+
+# OS
+Thumbs.db
+.DS_Store

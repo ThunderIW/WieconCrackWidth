@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="740" viewBox="0 0 1000 740" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+    </marker>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#c0392b"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="740" fill="#ffffff"/>
+  <text x="500" y="34" text-anchor="middle" font-size="19" font-weight="bold" fill="#222">Key diagram — crack-width calculator inputs</text>
+
+  <!-- ======== TOP CALLOUT: opposite-face rebar layer ======== -->
+  <text x="450" y="72" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">opposite_face_bar_diameter (&#216;t)</text>
+  <text x="450" y="91" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">opposite_face_bar_spacing (st) — centre-to-centre</text>
+  <text x="450" y="109" text-anchor="middle" font-size="11.5" fill="#555" font-style="italic">top rebar layer (opposite face)</text>
+  <line x1="450" y1="116" x2="458" y2="168" stroke="#999" stroke-width="1"/>
+
+  <!-- ======== CONCRETE SECTION ======== -->
+  <rect x="260" y="140" width="380" height="380" fill="#eef1f4" stroke="#333" stroke-width="1.6"/>
+
+  <!-- top rebar layer -->
+  <circle cx="300" cy="182" r="12" fill="#8a9bb0" stroke="#333"/>
+  <circle cx="380" cy="182" r="12" fill="#8a9bb0" stroke="#333"/>
+  <circle cx="460" cy="182" r="12" fill="#8a9bb0" stroke="#333"/>
+  <circle cx="540" cy="182" r="12" fill="#8a9bb0" stroke="#333"/>
+  <circle cx="620" cy="182" r="12" fill="#8a9bb0" stroke="#333"/>
+  <text x="318" y="187" font-size="11" fill="#333">&#216;t</text>
+
+  <!-- bottom rebar layer -->
+  <circle cx="300" cy="480" r="10" fill="#c98c4e" stroke="#333"/>
+  <circle cx="380" cy="480" r="10" fill="#c98c4e" stroke="#333"/>
+  <circle cx="460" cy="480" r="10" fill="#c98c4e" stroke="#333"/>
+  <circle cx="540" cy="480" r="10" fill="#c98c4e" stroke="#333"/>
+  <circle cx="620" cy="480" r="10" fill="#c98c4e" stroke="#333"/>
+  <text x="316" y="485" font-size="11" fill="#333">&#216;b</text>
+
+  <!-- st dim -->
+  <line x1="460" y1="182" x2="460" y2="212" stroke="#888" stroke-width="0.8" stroke-dasharray="2 2"/>
+  <line x1="540" y1="182" x2="540" y2="212" stroke="#888" stroke-width="0.8" stroke-dasharray="2 2"/>
+  <line x1="460" y1="206" x2="540" y2="206" stroke="#444" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text x="500" y="224" text-anchor="middle" font-size="11" fill="#333">st</text>
+
+  <!-- sb dim -->
+  <line x1="460" y1="480" x2="460" y2="450" stroke="#888" stroke-width="0.8" stroke-dasharray="2 2"/>
+  <line x1="540" y1="480" x2="540" y2="450" stroke="#888" stroke-width="0.8" stroke-dasharray="2 2"/>
+  <line x1="460" y1="456" x2="540" y2="456" stroke="#444" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text x="500" y="448" text-anchor="middle" font-size="11" fill="#333">sb</text>
+
+  <!-- cover dims (to bar surface) -->
+  <line x1="285" y1="140" x2="285" y2="170" stroke="#444" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text x="293" y="161" font-size="11" fill="#333">c</text>
+  <line x1="285" y1="490" x2="285" y2="520" stroke="#444" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text x="293" y="512" font-size="11" fill="#333">c</text>
+
+  <!-- cover callout (left) -->
+  <text x="40" y="296" font-size="13.5" font-weight="bold" fill="#222">cover_to_bar_surface (c)</text>
+  <text x="40" y="314" font-size="11.5" fill="#555">same both faces, measured</text>
+  <text x="40" y="330" font-size="11.5" fill="#555">to the bar surface (not centre)</text>
+  <line x1="200" y1="290" x2="282" y2="166" stroke="#999" stroke-width="1"/>
+  <line x1="200" y1="320" x2="282" y2="494" stroke="#999" stroke-width="1"/>
+
+  <!-- section_thickness dim -->
+  <line x1="240" y1="140" x2="240" y2="520" stroke="#444" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <line x1="234" y1="140" x2="260" y2="140" stroke="#444" stroke-width="1"/>
+  <line x1="234" y1="520" x2="260" y2="520" stroke="#444" stroke-width="1"/>
+  <text x="226" y="330" font-size="13.5" font-weight="bold" fill="#222" text-anchor="middle" transform="rotate(-90 226 330)">section_thickness (h)</text>
+
+  <!-- loads at the centroid -->
+  <line x1="450" y1="330" x2="560" y2="330" stroke="#c0392b" stroke-width="2" marker-end="url(#arrRed)"/>
+  <text x="568" y="325" font-size="13" fill="#c0392b" font-weight="bold">N</text>
+  <path d="M 485 330 A 35 35 0 0 0 415 330" fill="none" stroke="#c0392b" stroke-width="2" marker-end="url(#arrRed)"/>
+  <text x="446" y="284" font-size="13" fill="#c0392b" font-weight="bold">M</text>
+  <circle cx="450" cy="330" r="3" fill="#c0392b"/>
+
+  <!-- cracks on the tension face -->
+  <polyline points="340,520 336,502 342,486 338,470" fill="none" stroke="#c0392b" stroke-width="1.5"/>
+  <polyline points="420,520 424,502 418,486 422,470" fill="none" stroke="#c0392b" stroke-width="1.5"/>
+  <polyline points="500,520 496,502 502,486 498,470" fill="none" stroke="#c0392b" stroke-width="1.5"/>
+
+  <!-- section_width dim -->
+  <line x1="260" y1="560" x2="640" y2="560" stroke="#444" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <line x1="260" y1="520" x2="260" y2="566" stroke="#444" stroke-width="1"/>
+  <line x1="640" y1="520" x2="640" y2="566" stroke="#444" stroke-width="1"/>
+  <text x="330" y="585" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">section_width (b)</text>
+  <text x="330" y="603" text-anchor="middle" font-size="11.5" fill="#555">(1000 = 1 m strip of wall / slab)</text>
+
+  <!-- ======== BOTTOM CALLOUT: tension-face rebar layer ======== -->
+  <text x="500" y="634" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">tension_face_bar_diameter (&#216;b)</text>
+  <text x="500" y="653" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">tension_face_bar_spacing (sb) — centre-to-centre</text>
+  <text x="500" y="671" text-anchor="middle" font-size="11.5" fill="#b03a2e" font-style="italic">bottom rebar layer (tension face — the side that cracks)</text>
+  <line x1="520" y1="624" x2="545" y2="494" stroke="#999" stroke-width="1"/>
+
+  <!-- ======== RIGHT CALLOUTS: materials and loads ======== -->
+  <text x="690" y="190" font-size="13.5" font-weight="bold" fill="#222">Concrete:</text>
+  <text x="690" y="210" font-size="12.5" fill="#333">concrete_strength — fck [MPa], cylinder</text>
+  <text x="690" y="228" font-size="12.5" fill="#333">concrete_modulus — Ecm [GPa], 0 = auto</text>
+  <text x="690" y="246" font-size="12.5" fill="#333">creep_coeff — &#966; (0 = short-term, &#8776;2 long-term)</text>
+  <line x1="686" y1="222" x2="608" y2="260" stroke="#999" stroke-width="1"/>
+  <circle cx="605" cy="262" r="2.5" fill="#999"/>
+
+  <text x="690" y="296" font-size="13.5" font-weight="bold" fill="#222">Reinforcement (both layers):</text>
+  <text x="690" y="316" font-size="12.5" fill="#333">steel_modulus — Es [GPa], typically 200</text>
+  <text x="690" y="334" font-size="12.5" fill="#333">bar_type — 'ribbed' (default) or 'plain'</text>
+  <line x1="686" y1="310" x2="634" y2="192" stroke="#999" stroke-width="1"/>
+  <line x1="686" y1="320" x2="634" y2="472" stroke="#999" stroke-width="1"/>
+
+  <text x="690" y="392" font-size="13.5" font-weight="bold" fill="#222">Loads (arguments to report / run):</text>
+  <text x="690" y="412" font-size="12.5" fill="#333">N_kN — axial force [kN], tension positive</text>
+  <text x="690" y="430" font-size="12.5" fill="#333">M_kNm — bending moment [kNm]</text>
+  <text x="690" y="448" font-size="12.5" fill="#333">load_duration — 'long' (default) or 'short'</text>
+  <text x="690" y="466" font-size="12.5" fill="#333">w_max — crack-width limit [mm], default 0.30</text>
+  <line x1="686" y1="406" x2="572" y2="332" stroke="#999" stroke-width="1"/>
+
+  <text x="690" y="510" font-size="12" fill="#b03a2e" font-style="italic">M and N decide which face cracks —</text>
+  <text x="690" y="527" font-size="12" fill="#b03a2e" font-style="italic">the bars on that side are the tension_face_* inputs.</text>
+
+  <!-- footer -->
+  <line x1="80" y1="700" x2="920" y2="700" stroke="#ddd" stroke-width="1"/>
+  <text x="500" y="722" text-anchor="middle" font-size="12" fill="#555">All spacings are centre-to-centre &#183; cover is to the bar surface &#183; check passes when wk &#8804; w_max</text>
+</svg>

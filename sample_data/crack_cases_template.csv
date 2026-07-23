@@ -1,0 +1,2 @@
+name,section_width,section_thickness,cover_to_bar_surface,tension_face_bar_diameter,tension_face_bar_spacing,opposite_face_bar_diameter,opposite_face_bar_spacing,concrete_strength,concrete_modulus,steel_modulus,creep_coeff,N_kN,M_kNm,w_max,bar_type,load_duration
+Example (edit or delete this row),1000,525,40,16,150,20,150,50,34,200,0,529,116,0.3,ribbed,long

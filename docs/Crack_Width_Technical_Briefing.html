@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<title>Crack Width Application — Technical Briefing</title>
+<style>
+  :root {
+    --ink:        #151b23;
+    --ink-soft:   #4a5560;
+    --ink-faint:  #7b8590;
+    --paper:      #f6f7f9;
+    --panel:      #ffffff;
+    --rule:       #d8dde3;
+    --rule-soft:  #e7eaee;
+    --accent:     #1c6ea4;
+    --accent-bg:  #e8f1f7;
+    --pass:       #2e7d5b;
+    --fail:       #b3392f;
+    --caution:    #a86a12;
+    --caution-bg: #fbf3e3;
+    --fail-bg:    #fbeceb;
+
+    --sans: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink:        #dde3ea;
+      --ink-soft:   #97a2ae;
+      --ink-faint:  #6b7681;
+      --paper:      #11151a;
+      --panel:      #171d24;
+      --rule:       #2b333c;
+      --rule-soft:  #232a32;
+      --accent:     #5fb0e0;
+      --accent-bg:  #162935;
+      --pass:       #5cb98d;
+      --fail:       #e0776b;
+      --caution:    #d9a557;
+      --caution-bg: #2a220f;
+      --fail-bg:    #2b1a18;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink:        #dde3ea;
+    --ink-soft:   #97a2ae;
+    --ink-faint:  #6b7681;
+    --paper:      #11151a;
+    --panel:      #171d24;
+    --rule:       #2b333c;
+    --rule-soft:  #232a32;
+    --accent:     #5fb0e0;
+    --accent-bg:  #162935;
+    --pass:       #5cb98d;
+    --fail:       #e0776b;
+    --caution:    #d9a557;
+    --caution-bg: #2a220f;
+    --fail-bg:    #2b1a18;
+  }
+  :root[data-theme="light"] {
+    --ink:        #151b23;
+    --ink-soft:   #4a5560;
+    --ink-faint:  #7b8590;
+    --paper:      #f6f7f9;
+    --panel:      #ffffff;
+    --rule:       #d8dde3;
+    --rule-soft:  #e7eaee;
+    --accent:     #1c6ea4;
+    --accent-bg:  #e8f1f7;
+    --pass:       #2e7d5b;
+    --fail:       #b3392f;
+    --caution:    #a86a12;
+    --caution-bg: #fbf3e3;
+    --fail-bg:    #fbeceb;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    margin: 0;
+    padding: 0 1.5rem 6rem;
+  }
+
+  .wrap { max-width: 46rem; margin: 0 auto; }
+
+  header.masthead {
+    padding: 4.5rem 0 2rem;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 3rem;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: .72rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 1rem;
+  }
+  h1 {
+    font-size: clamp(2rem, 5vw, 2.9rem);
+    line-height: 1.08;
+    letter-spacing: -.022em;
+    font-weight: 700;
+    margin: 0 0 1rem;
+    text-wrap: balance;
+  }
+  .standfirst {
+    font-size: 1.12rem;
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 34rem;
+  }
+
+  section { margin-bottom: 3.5rem; }
+
+  h2 {
+    font-size: 1.32rem;
+    letter-spacing: -.012em;
+    font-weight: 700;
+    margin: 0 0 .35rem;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid var(--rule);
+    text-wrap: balance;
+  }
+  .sub {
+    color: var(--ink-faint);
+    font-size: .87rem;
+    margin: 0 0 1.5rem;
+  }
+  h3 {
+    font-size: 1rem;
+    font-weight: 660;
+    margin: 2rem 0 .5rem;
+    letter-spacing: -.005em;
+  }
+  p { margin: 0 0 1rem; }
+  a { color: var(--accent); }
+  strong { font-weight: 660; }
+
+  code {
+    font-family: var(--mono);
+    font-size: .855em;
+    background: var(--rule-soft);
+    padding: .12em .36em;
+    border-radius: 3px;
+  }
+  pre {
+    font-family: var(--mono);
+    font-size: .8rem;
+    line-height: 1.6;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    margin: 0 0 1rem;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+
+  .scroll { overflow-x: auto; margin: 0 0 1.25rem; border: 1px solid var(--rule); background: var(--panel); }
+  table { border-collapse: collapse; width: 100%; font-size: .855rem; }
+  th, td { padding: .55rem .8rem; text-align: left; border-bottom: 1px solid var(--rule-soft); white-space: nowrap; }
+  th {
+    font-family: var(--mono);
+    font-size: .68rem;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 500;
+    border-bottom: 1px solid var(--rule);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+  td.lbl { font-family: var(--mono); font-size: .8rem; }
+
+  .pill {
+    font-family: var(--mono);
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .05em;
+    padding: .12em .5em;
+    border-radius: 2px;
+    display: inline-block;
+  }
+  .pill.pass { color: var(--pass);    background: color-mix(in srgb, var(--pass) 12%, transparent); }
+  .pill.fail { color: var(--fail);    background: color-mix(in srgb, var(--fail) 14%, transparent); }
+  .pill.warn { color: var(--caution); background: color-mix(in srgb, var(--caution) 16%, transparent); }
+
+  /* Steps: numbered because the calculation genuinely is a fixed 9-step sequence. */
+  ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 0; }
+  ol.steps li {
+    counter-increment: s;
+    display: grid;
+    grid-template-columns: 2.2rem 1fr;
+    gap: .9rem;
+    padding: .6rem 0;
+    border-bottom: 1px solid var(--rule-soft);
+    align-items: baseline;
+  }
+  ol.steps li::before {
+    content: counter(s, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: .74rem;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  ol.steps li:last-child { border-bottom: none; }
+  .step-t { font-weight: 620; }
+  .step-d { color: var(--ink-soft); font-size: .9rem; display: block; }
+
+  .defect {
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--caution);
+    background: var(--caution-bg);
+    padding: 1rem 1.15rem;
+    margin: 0 0 1.1rem;
+  }
+  .defect.critical { border-left-color: var(--fail); background: var(--fail-bg); }
+  .defect.fixed { border-left-color: var(--pass); background: color-mix(in srgb, var(--pass) 8%, transparent); }
+  .defect h4 {
+    margin: 0 0 .4rem;
+    font-size: .95rem;
+    font-weight: 680;
+    display: flex;
+    gap: .6rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .defect p { margin: 0 0 .5rem; font-size: .9rem; color: var(--ink-soft); }
+  .defect p:last-child { margin-bottom: 0; }
+  .defect .repro {
+    font-family: var(--mono);
+    font-size: .78rem;
+    color: var(--ink);
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    padding: .5rem .7rem;
+    display: block;
+    overflow-x: auto;
+  }
+
+  /* Architecture diagrams. Drawn with tokens so both themes stay legible. */
+  .diagram { padding: 1.25rem 1rem; }
+  .diagram svg { display: block; width: 100%; min-width: 40rem; height: auto; }
+  .d-proc  { fill: none; stroke: var(--rule); stroke-width: 1; stroke-dasharray: 3 3; }
+  .d-box   { fill: var(--paper); stroke: var(--rule); stroke-width: 1; }
+  .d-ui    { stroke: var(--accent); }
+  .d-eng   { stroke: var(--pass); }
+  .d-db    { stroke: var(--caution); }
+  .d-store { fill: var(--rule-soft); stroke: var(--rule); }
+  .d-line  { stroke: var(--ink-faint); stroke-width: 1.2; fill: none; }
+  .d-dash  { stroke: var(--rule); stroke-width: 1; stroke-dasharray: 4 4; }
+  .d-arrow-h { fill: var(--ink-faint); }
+  .d-cap   { fill: var(--ink-faint); font-family: var(--mono); font-size: 9px; letter-spacing: .09em; }
+  .d-lbl   { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-weight: 620; }
+  .d-lbl-s { fill: var(--ink); font-family: var(--mono); font-size: 11px; }
+  .d-sub   { fill: var(--ink-soft); font-family: var(--sans); font-size: 10.5px; }
+  .d-note  { fill: var(--ink-faint); font-family: var(--mono); font-size: 9.5px; }
+
+  .layers { display: flex; flex-direction: column; gap: 0; margin-bottom: 1.25rem; }
+  .layer {
+    border: 1px solid var(--rule);
+    border-bottom: none;
+    background: var(--panel);
+    padding: .85rem 1.1rem;
+    display: grid;
+    grid-template-columns: 9.5rem 1fr;
+    gap: 1rem;
+    align-items: baseline;
+  }
+  .layer:last-child { border-bottom: 1px solid var(--rule); }
+  .layer-n { font-family: var(--mono); font-size: .78rem; color: var(--accent); font-weight: 600; }
+  .layer-d { font-size: .88rem; color: var(--ink-soft); }
+  @media (max-width: 34rem) {
+    .layer { grid-template-columns: 1fr; gap: .2rem; }
+    ol.steps li { grid-template-columns: 1.6rem 1fr; gap: .6rem; }
+  }
+
+  .kv { display: grid; grid-template-columns: auto 1fr; gap: .35rem 1.2rem; font-size: .9rem; margin-bottom: 1.25rem; }
+  .kv dt { font-family: var(--mono); font-size: .8rem; color: var(--ink-faint); }
+  .kv dd { margin: 0; }
+
+  footer {
+    border-top: 1px solid var(--rule);
+    padding-top: 1.25rem;
+    color: var(--ink-faint);
+    font-size: .82rem;
+  }
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">Wiecon · Internal Tools</p>
+  <h1>Crack Width Application</h1>
+  <p class="standfirst">A reinforced-concrete crack-width check to EN 1992-1-1 cl. 7.3.4, delivered as a self-contained Windows desktop app. What it does, how it's built, and what's still wrong with it.</p>
+</header>
+
+<section>
+  <h2>What it is, in one breath</h2>
+  <p class="sub">The elevator answer</p>
+  <p>It takes the 16 inputs an engineer already has — section geometry, reinforcement layout, material grades, and the service loads N and M — and returns the characteristic crack width <code>w<sub>k</sub></code>, checked against a limit. The answer updates as you type; there is no Calculate button. It saves named cases to a local database so you can compare a wall's base, mid and top in one table, and export any of them to a PDF report.</p>
+  <p>It runs as a single <code>.exe</code>. No Python install, no browser, no server to start. Double-click and a native window opens.</p>
+</section>
+
+<section>
+  <h2>Architecture</h2>
+  <p class="sub">Three layers, each replaceable without touching the others</p>
+
+  <div class="layers">
+    <div class="layer">
+      <span class="layer-n">main_niceGUI.py</span>
+      <span class="layer-d">The whole UI, and the shell. <code>build_ui()</code> declares the element tree; <code>ui.run(native=…)</code> owns the window and the server. One file, one entry point.</span>
+    </div>
+    <div class="layer">
+      <span class="layer-n">WieconTools/</span>
+      <span class="layer-d">The engine. <code>crack_analyze</code> — pure maths, no UI import, no database. Testable on its own.</span>
+    </div>
+    <div class="layer">
+      <span class="layer-n">models/<br>DatabaseInteractionTools/</span>
+      <span class="layer-d">Persistence. SQLModel over SQLite; <code>InteractionFile</code> is the only thing that talks SQL.</span>
+    </div>
+  </div>
+
+  <p>The important property: <strong>the engine knows nothing about the UI.</strong> <code>crack_analyze</code> takes numbers and returns a <code>report_result</code> dataclass with all 22 quantities, not just the answer. That's why the detail view, the PDF report and the database row can all be built from one run, and why the engine can be regression-tested without launching anything.</p>
+
+  <p>The front of the stack is deliberately flat. There is no shell module and no page router: <code>ui.run(native=True)</code> <em>is</em> the shell, so the whole app is one screen in one module, reached with no navigation at all. Everything the tool does is on that screen when it opens.</p>
+
+  <h3>Process and deployment view</h3>
+  <p>Two OS processes, one boundary between them. <strong>The server is the parent</strong>: <code>ui.run(native=True)</code> starts uvicorn in this process and spawns the pywebview window as a child. Everything below the dotted line is ordinary Python.</p>
+
+  <div class="scroll diagram">
+  <svg viewBox="0 0 720 400" role="img" aria-labelledby="dep-t">
+    <title id="dep-t">Deployment: a NiceGUI server process, which loads the UI, engine and database layers, spawns a pywebview window child process that talks back to it over HTTP and a websocket on port 8082.</title>
+    <defs>
+      <marker id="ar" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+        <polygon points="0 0, 9 3.5, 0 7" class="d-arrow-h"/>
+      </marker>
+    </defs>
+
+    <rect x="12" y="14" width="200" height="128" rx="3" class="d-proc"/>
+    <text x="24" y="36" class="d-cap">PROCESS 2 — CHILD (SPAWNED)</text>
+    <rect x="28" y="48" width="168" height="34" rx="2" class="d-box"/>
+    <text x="40" y="70" class="d-lbl">pywebview window</text>
+    <rect x="28" y="92" width="168" height="34" rx="2" class="d-box"/>
+    <text x="40" y="114" class="d-lbl">WebView2 (Edge)</text>
+
+    <line x1="212" y1="80" x2="286" y2="80" class="d-line" marker-end="url(#ar)"/>
+    <text x="220" y="70" class="d-note">HTTP + WebSocket</text>
+    <text x="222" y="98" class="d-note">127.0.0.1:8082</text>
+
+    <rect x="290" y="14" width="418" height="372" rx="3" class="d-proc"/>
+    <text x="304" y="36" class="d-cap">PROCESS 1 — PARENT (ui.run)</text>
+
+    <rect x="306" y="48" width="386" height="42" rx="2" class="d-box d-ui"/>
+    <text x="318" y="66" class="d-lbl">NiceGUI server — FastAPI + uvicorn</text>
+    <text x="318" y="82" class="d-sub">holds the element tree; pushes diffs down the socket</text>
+
+    <line x1="499" y1="90" x2="499" y2="112" class="d-line" marker-end="url(#ar)"/>
+
+    <rect x="306" y="116" width="386" height="52" rx="2" class="d-box d-ui"/>
+    <text x="318" y="136" class="d-lbl">main_niceGUI.py → build_ui()</text>
+    <text x="318" y="152" class="d-sub">inputs · live summary · result pill · saved-files grid</text>
+    <text x="318" y="164" class="d-sub">FRONTEND</text>
+
+    <line x1="499" y1="168" x2="499" y2="192" class="d-line" marker-end="url(#ar)"/>
+
+    <rect x="306" y="196" width="386" height="52" rx="2" class="d-box d-eng"/>
+    <text x="318" y="216" class="d-lbl">WieconTools/ — crack_analyze</text>
+    <text x="318" y="232" class="d-sub">pure maths · no UI, no SQL · 9 steps</text>
+    <text x="318" y="244" class="d-sub">BACKEND — DOMAIN</text>
+
+    <line x1="499" y1="248" x2="499" y2="272" class="d-line" marker-end="url(#ar)"/>
+
+    <rect x="306" y="276" width="386" height="52" rx="2" class="d-box d-db"/>
+    <text x="318" y="296" class="d-lbl">DatabaseInteractionTools/ + models/</text>
+    <text x="318" y="312" class="d-sub">SQLModel · the only layer that speaks SQL</text>
+    <text x="318" y="324" class="d-sub">BACKEND — PERSISTENCE</text>
+
+    <line x1="499" y1="328" x2="499" y2="352" class="d-line" marker-end="url(#ar)"/>
+    <rect x="306" y="356" width="386" height="20" rx="2" class="d-box d-store"/>
+    <text x="318" y="370" class="d-lbl-s">SQLite — data\ beside the .exe  (frozen) · database\ (source)</text>
+
+    <line x1="12" y1="180" x2="212" y2="180" class="d-dash"/>
+    <text x="12" y="198" class="d-note">below: plain Python</text>
+    <text x="12" y="212" class="d-note">no NiceGUI coupling</text>
+  </svg>
+  </div>
+
+  <p>The child is spawned by <code>multiprocessing</code>, which on Windows re-imports this module under the name <code>__mp_main__</code> — which is why the entry guard reads <code>if __name__ in {"__main__", "__mp_main__"}</code> rather than the usual one name. Miss that and a frozen exe relaunches itself forever. <code>multiprocessing.freeze_support()</code> is what makes the spawn work once bundled.</p>
+
+  <p>You will see <strong>two processes</strong> in Task Manager. That is correct, not a leak. Note the port is fixed at <strong>8082</strong>, not an OS-assigned free one: if something else holds it, the app will not start.</p>
+</section>
+
+<section>
+  <h2>Frontend architecture</h2>
+  <p class="sub">A real element tree with real event handlers — built once, then mutated</p>
+
+  <p>The single most important thing to understand: <strong>the script does not rerun.</strong> <code>build_ui()</code> executes once per client, constructing a tree of Python objects that persist on the server. Every one of them has a JavaScript counterpart in the browser. When a handler mutates an element, NiceGUI sends the delta down a websocket. The tree is built once and then mutated in place for the life of the client — there is no re-execution to design around.</p>
+
+  <h3>Call tree</h3>
+  <pre><code>ui.run(root=build_ui, port=8082, native=FROZEN, reload=not FROZEN)
+ └─ build_ui()                                   ← runs once per client
+     ├─ ui.dark_mode() + apply_theme()           ← Wiecon palette, re-tinted per mode
+     ├─ ui.header()
+     │   ├─ logo (white chip, navy header)
+     │   └─ Credits → ui.dialog()
+     ├─ ui.card()  "Inputs"
+     │   ├─ Reference Image → ui.dialog(maximized) → ui.image(DIAGRAM)
+     │   ├─ for group in by_group:  ui.expansion(group)     ← 4 panels
+     │   │   ├─ Geometry       … 3 ui.number
+     │   │   ├─ Reinforcement  … 4 ui.number + 1 ui.select
+     │   │   ├─ Materials      … 4 ui.number
+     │   │   └─ Loads          … 3 ui.number + 1 ui.select
+     │   ├─ el.on_value_change(live_chip.refresh)  for every input
+     │   ├─ "Summary of inputs" → row(fid) × 16
+     │   │       └─ ui.label().bind_text_from(inputs[fid], "value", fmt)
+     │   ├─ live_chip()                           ← @ui.refreshable
+     │   │       └─ crack_analyze(**section).run(N, M, w_max)
+     │   ├─ Save File → save_result() → save_dialog()
+     │   │       └─ InteractionFile().add_new_result_to_crackWidth_table()
+     │   └─ ui.aggrid(...)  "Saved Files"
+     │       ├─ selectionChanged → on_selected_changed()   ← shows/hides buttons
+     │       ├─ View More Detail → get_selected_rows()
+     │       │       └─ PDF icon → build_detail_pdf() → ui.download()
+     │       ├─ Delete File     → delete_selected_cases()  ← confirm dialog
+     │       └─ Delete All      → delete_all_cases()       ← confirm dialog
+     ├─ ui.keyboard()      ← 'f' toggles fullscreen
+     └─ ui.page_sticky()   ← dark-mode FAB</code></pre>
+
+  <h3>State — where it actually lives</h3>
+  <p>There is no session store. The elements <em>are</em> the state, and <code>inputs</code> is just a dict of references to them.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Holds</th><th>What</th><th>Read by</th></tr></thead>
+      <tbody>
+        <tr><td class="lbl">inputs[fid]</td><td>The 16 live <code>ui.number</code> / <code>ui.select</code> elements</td><td><code>.value</code> is read on demand by <code>live_chip()</code> and <code>save_result()</code></td></tr>
+        <tr><td class="lbl">live_chip</td><td><code>@ui.refreshable</code> — the verdict pill</td><td>Rebuilt by <code>live_chip.refresh()</code>, wired to every input's <code>on_value_change</code></td></tr>
+        <tr><td class="lbl">summary labels</td><td><code>bind_text_from(inputs[fid], "value", fmt)</code></td><td>NiceGUI re-runs <code>fmt</code> and pushes the text itself — no handler</td></tr>
+        <tr><td class="lbl">saved_grid.options</td><td><code>rowData</code>, the full table incl. hidden <code>id</code></td><td><code>refresh_saved_cases()</code> rewrites it and calls <code>.update()</code></td></tr>
+        <tr><td class="lbl">dark</td><td><code>ui.dark_mode()</code> handle</td><td>The FAB's icon binds to it; <code>apply_theme()</code> re-tints primary</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Nothing is stashed anywhere, and nothing is cached.</strong> The Save button keeps no copy of the last result: it re-reads <code>inputs</code> and re-runs the engine, which is cheap and deterministic. That is what guarantees a saved row's inputs and outputs can never disagree — both come from one run, made at the moment you asked for it.</p>
+
+  <h3>Three rules the layout obeys</h3>
+  <p><strong>The inputs are debounced.</strong> Every <code>ui.number</code> carries <code>debounce=300</code>: a field waits 300 ms after the last keystroke before it fires. That is what makes a live verdict tolerable — it follows you as you type, but never flashes a value computed from a half-typed number, and it is why there is no Calculate button to press.</p>
+  <p><strong>The chip must survive bad input.</strong> <code>live_chip()</code> is called on every change, including while a field is empty (<code>ui.number</code> holds <code>None</code>, not 0) or mid-edit. It returns a grey <code>—</code> for both the empty case and any engine exception, silently. The explicit Save path does the opposite: it names the missing fields, because there the user asked for an answer.</p>
+  <p><strong>The UI must be built inside a root function.</strong> <code>ui.run(root=build_ui)</code> takes the function, uncalled. Build the UI at module level instead and NiceGUI drops into "script mode", re-executing <code>sys.argv[0]</code> per client — which in a frozen exe means handing a binary to <code>runpy</code> and dying on <em>source code string cannot contain null bytes</em>.</p>
+</section>
+
+<section>
+  <h2>Backend architecture</h2>
+  <p class="sub">One contract in, one dataclass out, seven columns persisted</p>
+
+  <h3>The data contract</h3>
+  <p>The whole backend is a funnel: 16 inputs split into a section and a load case, the engine returns 22 quantities, and only 7 of them are written to disk.</p>
+
+  <div class="scroll diagram">
+  <svg viewBox="0 0 720 300" role="img" aria-labelledby="dat-t">
+    <title id="dat-t">Data flow: 16 form inputs split 13/3 into the engine constructor and run method, producing a 22-field report_result, of which 7 fields plus the 16 inputs and 3 metadata columns become a 26-column database row.</title>
+    <defs>
+      <marker id="ar2" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+        <polygon points="0 0, 9 3.5, 0 7" class="d-arrow-h"/>
+      </marker>
+    </defs>
+
+    <rect x="10" y="60" width="130" height="86" rx="3" class="d-box d-ui"/>
+    <text x="22" y="82" class="d-cap">INPUTS</text>
+    <text x="22" y="104" class="d-lbl">16 fields</text>
+    <text x="22" y="122" class="d-sub">14 numeric</text>
+    <text x="22" y="136" class="d-sub">2 choice</text>
+
+    <path d="M140 90 L 214 90" class="d-line" marker-end="url(#ar2)"/>
+    <text x="150" y="82" class="d-note">13 · section</text>
+    <path d="M140 122 L 214 122" class="d-line" marker-end="url(#ar2)"/>
+    <text x="150" y="140" class="d-note">3 · N, M, w_max</text>
+
+    <rect x="218" y="46" width="164" height="114" rx="3" class="d-box d-eng"/>
+    <text x="230" y="68" class="d-cap">ENGINE</text>
+    <text x="230" y="90" class="d-lbl-s">crack_analyze(…13)</text>
+    <text x="230" y="112" class="d-lbl-s">.run(N, M, w_max)</text>
+    <text x="230" y="136" class="d-sub">9 steps, deterministic</text>
+    <text x="230" y="150" class="d-sub">no I/O, no globals</text>
+
+    <path d="M382 103 L 456 103" class="d-line" marker-end="url(#ar2)"/>
+
+    <rect x="460" y="46" width="130" height="114" rx="3" class="d-box"/>
+    <text x="472" y="68" class="d-cap">RESULT</text>
+    <text x="472" y="90" class="d-lbl">report_result</text>
+    <text x="472" y="110" class="d-sub">22 fields</text>
+    <text x="472" y="126" class="d-sub">plain dataclass</text>
+    <text x="472" y="148" class="d-sub">→ detail view · PDF</text>
+
+    <path d="M525 160 L 525 208" class="d-line" marker-end="url(#ar2)"/>
+    <text x="533" y="184" class="d-note">7 kept · 15 dropped</text>
+
+    <rect x="218" y="212" width="372" height="70" rx="3" class="d-box d-db"/>
+    <text x="230" y="234" class="d-cap">CRACKWIDTHRESULTTABLE — 26 COLUMNS</text>
+    <text x="230" y="256" class="d-sub">id · name · created_at   +   16 inputs   +   7 results</text>
+    <text x="230" y="272" class="d-sub">wk · ok · mode · sigma_s · sr_max · sr_equation · rho_p_eff</text>
+
+    <path d="M75 146 L 75 247 L 214 247" class="d-line" marker-end="url(#ar2)"/>
+    <text x="84" y="240" class="d-note">16 inputs stored verbatim</text>
+  </svg>
+  </div>
+
+  <p>The 15 dropped fields — <code>x</code>, <code>alpha_e</code>, <code>fctm</code>, <code>hc_eff</code>, <code>k2</code>, <code>esm_minus_ecm</code>, <code>cracked</code> and the rest — are the intermediate workings. A saved case therefore <strong>cannot reproduce the full report table</strong> as-is. It doesn't need to: because all 16 inputs are stored verbatim and the engine is deterministic, any saved row can be re-run to regenerate every intermediate. That's a deliberate trade, and it's the answer if someone asks why the table is so narrow.</p>
+
+  <p>One caveat the diagram can't show: <code>report_result</code> is a <em>mutable</em> dataclass. Nothing currently mutates one, but nothing stops it either.</p>
+
+  <h3>Persistence</h3>
+  <p><code>InteractionFile</code> is the entire data-access layer — three methods, and the only place SQL is spoken:</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Method</th><th>Does</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="lbl">get_all_result_for_crackWidth_table()</td><td>SELECT all, newest first</td><td>Ordered by <code>created_at DESC</code></td></tr>
+        <tr><td class="lbl">add_new_result_to_crackWidth_table()</td><td>INSERT one case</td><td>Splats <code>**params</code> + 7 result keys; returns the row with its id</td></tr>
+        <tr><td class="lbl">delete_results_from_crackWidth_table()</td><td>DELETE by id or list</td><td>Skips ids that aren't there and doesn't count them — see defect 5</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><code>StartEngine</code> owns the SQLite engine and creates the schema on construction — <code>create_all</code> emits <code>CREATE TABLE IF NOT EXISTS</code>, so it is safe against a populated database. Every method opens and closes its own <code>Session</code>: short transactions, nothing held open between interactions.</p>
+
+  <p>What there is <em>not</em> is any caching of the engine itself. The four call sites each construct <code>InteractionFile()</code> inline, and its <code>__init__</code> builds a new engine every time — so every save, every delete and every grid refresh re-runs <code>create_all</code> against the database. See defect 6. It is not a correctness problem, and against a local SQLite file it is not a visible one either, but it is the wrong shape, and worth knowing before someone reports it as one.</p>
+
+  <h3>Why the layering pays off</h3>
+  <p>Because <code>crack_analyze</code> imports neither the UI framework nor anything web-facing, the entire verification section below was produced without launching the app, and still stands without re-running a single calculation. The frontend could be replaced wholesale — a different framework, a different execution model, a different process topology — and these three packages would not notice. The same property means the engine could be lifted into a REST service, a batch job over a spreadsheet of sections, or the next UI, without a single edit.</p>
+</section>
+
+<section>
+  <h2>How the desktop packaging actually works</h2>
+  <p class="sub">The part people ask about, because it's the non-obvious bit</p>
+
+  <p>NiceGUI is a <em>web server</em> — FastAPI under uvicorn — so a desktop build needs both a window and a server. You do not write the glue between them: <code>native=True</code> makes NiceGUI spawn the pywebview window itself:</p>
+
+  <pre><code>CrackWidthNiceGUI.exe            ← parent: uvicorn + the element tree
+  └── CrackWidthNiceGUI.exe      ← child:  the pywebview window
+      (re-imported as __mp_main__)</code></pre>
+
+  <p>One flag covers it — no sentinel argv to parse, no health-check polling, no teardown to write by hand. The same <code>ui.run()</code> call serves both modes, keyed off <code>FROZEN = getattr(sys, "frozen", False)</code>: packaged, you get a native window and no reloader; from source, you get a browser tab with hot reload. That branch matters — <code>watchfiles</code> cannot run inside a frozen exe.</p>
+
+  <h3>Why a window and not a browser tab</h3>
+  <p>The app could simply open at <code>localhost:8082</code> in Edge — that is exactly what it does in development. It ships as a window because the deliverable is a tool an engineer double-clicks, not a service they navigate to: no browser to keep open, no URL to remember, no tab lost among thirty others, and a taskbar icon that says what it is. pywebview runs <strong>real CPython</strong> behind WebView2, so nothing about the app changes between the two modes — same server, same element tree, same SQLite file.</p>
+</section>
+
+<section>
+  <h2>The NiceGUI mental model</h2>
+  <p class="sub">If you're asked "how does the UI work", this is the answer</p>
+
+  <p><strong>The UI is a tree of Python objects that outlives the request.</strong> <code>build_ui()</code> runs once per client and never again. After that, handlers fire on events, mutate elements, and NiceGUI ships the diff to the browser over a websocket. It is closer to writing a desktop toolkit than to writing a web page.</p>
+
+  <dl class="kv">
+    <dt>ui.run(root=…)</dt>
+    <dd>Takes the builder <em>function</em>, uncalled. Keeps NiceGUI out of script mode, which a frozen exe cannot survive.</dd>
+    <dt>@ui.refreshable</dt>
+    <dd>Marks a function whose output can be torn down and rebuilt on demand. <code>live_chip.refresh()</code> is the only thing that redraws the verdict pill.</dd>
+    <dt>bind_text_from</dt>
+    <dd>A declarative link: label text follows an element's value through a formatter, with no handler in between. That's the entire "Summary of inputs".</dd>
+    <dt>debounce=300</dt>
+    <dd>A Quasar prop on each <code>ui.number</code>. The reason the verdict settles after typing stops instead of thrashing per keystroke.</dd>
+    <dt>ui.aggrid</dt>
+    <dd>A real AG Grid. Keys prefixed <code>:</code> are sent as JavaScript, not strings — that's how <code>valueFormatter</code> becomes a live function. <code>cellClassRules</code> is the exception: plain expressions AG Grid evaluates itself, where the row is <code>data</code>, not <code>params.data</code>.</dd>
+  </dl>
+
+  <p>The quirks the model does produce are its own: <code>ui.number</code> holds <code>None</code> when cleared (not 0), so every read path has to tolerate it; AG Grid's no-rows overlay does not lift itself when <code>rowData</code> is filled live, so <code>refresh_saved_cases()</code> toggles it by hand; and replacing <code>rowData</code> drops the selection without reliably firing <code>selectionChanged</code>, so the action buttons have to be hidden manually or they linger, still offering to delete rows that are no longer selected.</p>
+</section>
+
+<section>
+  <h2>The calculation</h2>
+  <p class="sub">EN 1992-1-1 cl. 7.3.4 — nine steps, in fixed order</p>
+
+  <p>Steps 4 and 7 were corrected on 17 July 2026 to fix defect 3. The nine steps, and their order, are otherwise as first written.</p>
+
+  <ol class="steps">
+    <li><span><span class="step-t">Steel areas</span><span class="step-d">A<sub>s</sub> per metre from bar diameter and spacing, both faces.</span></span></li>
+    <li><span><span class="step-t">Material properties</span><span class="step-d">f<sub>ctm</sub>, E<sub>c</sub>, creep-adjusted E<sub>c,eff</sub>, modular ratio α<sub>e</sub>. Two branches at f<sub>ck</sub> = 50 MPa.</span></span></li>
+    <li><span><span class="step-t">Cracking check</span><span class="step-d">σ<sub>ct</sub> = N/A + M/W against f<sub>ctm</sub>. Reported — but see defect 4.</span></span></li>
+    <li><span><span class="step-t">Steel stress</span><span class="step-d">The hard one. Bisects for the neutral axis <em>x</em>, then σ<sub>s</sub>. Splits into "N+M" and "pure-tension" modes.</span></span></li>
+    <li><span><span class="step-t">Effective tension area</span><span class="step-d">h<sub>c,eff</sub>, A<sub>c,eff</sub>, ρ<sub>p,eff</sub>, and the strain coefficient k₂.</span></span></li>
+    <li><span><span class="step-t">Mean strain</span><span class="step-d">ε<sub>sm</sub> − ε<sub>cm</sub>, with the code's 0.6σ<sub>s</sub>/E<sub>s</sub> floor.</span></span></li>
+    <li><span><span class="step-t">Crack spacing</span><span class="step-d">s<sub>r,max</sub> — Eq 7.11 for close bars, Eq 7.14 when spacing exceeds 5(c + ø/2).</span></span></li>
+    <li><span><span class="step-t">Crack width</span><span class="step-d">w<sub>k</sub> = s<sub>r,max</sub> × (ε<sub>sm</sub> − ε<sub>cm</sub>).</span></span></li>
+    <li><span><span class="step-t">Verdict</span><span class="step-d">w<sub>k</sub> ≤ w<sub>max</sub>.</span></span></li>
+  </ol>
+</section>
+
+<section>
+  <h2>Verification</h2>
+  <p class="sub">Regression against the Wadi benchmark in the module docstring — 1000×525 mm, ø16@150, C50, N = 529 kN, M = 116 kNm</p>
+
+  <p>Re-run on 17 July 2026, after the creep fix. Every quantity below still reproduces the reference tool exactly, because that fix is inert at φ = 0 — which is what the benchmark, the load sweep and all but one row of the parameter table use. The single number that moved anywhere in this section is the creep row. If you touch <code>crack_width_formula.py</code> again, re-run this section before you quote it.</p>
+
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Quantity</th><th>Expected</th><th>Computed</th><th>Result</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="lbl">α<sub>e</sub></td><td class="num">5.88</td><td class="num">5.882</td><td><span class="pill pass">MATCH</span></td></tr>
+        <tr><td class="lbl">x</td><td class="num">25.1</td><td class="num">25.121</td><td><span class="pill pass">MATCH</span></td></tr>
+        <tr><td class="lbl">σ<sub>s</sub></td><td class="num">395.7</td><td class="num">395.658</td><td><span class="pill pass">MATCH</span></td></tr>
+        <tr><td class="lbl">ρ<sub>p,eff</sub></td><td class="num">1.12 %</td><td class="num">1.117 %</td><td><span class="pill pass">MATCH</span></td></tr>
+        <tr><td class="lbl">s<sub>r,max</sub></td><td class="num">565</td><td class="num">564.558</td><td><span class="pill pass">MATCH</span></td></tr>
+        <tr><td class="lbl">w<sub>k</sub></td><td class="num">0.678</td><td class="num">0.678</td><td><span class="pill pass">MATCH</span></td></tr>
+        <tr><td class="lbl">verdict</td><td class="num">FAIL</td><td class="num">FAIL</td><td><span class="pill pass">MATCH</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>All six quantities reproduce the reference HTML tool. <strong>For the load case it was built for, the engine is correct.</strong> That is the sentence to lead with — and then qualify, because the sweep below is where it stops being true.</p>
+
+  <h3>Load-case sweep</h3>
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Case</th><th>N kN</th><th>M kNm</th><th>Mode</th><th>σ<sub>s</sub> MPa</th><th>w<sub>k</sub> mm</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="lbl">service N+M (Wadi)</td><td class="num">529</td><td class="num">116</td><td class="lbl">N+M</td><td class="num">395.7</td><td class="num">0.678</td><td><span class="pill fail">FAIL</span></td></tr>
+        <tr><td class="lbl">pure tension</td><td class="num">529</td><td class="num">0</td><td class="lbl">pure-tension</td><td class="num">154.0</td><td class="num">0.288</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="lbl">pure bending</td><td class="num">0</td><td class="num">116</td><td class="lbl">N+M</td><td class="num">192.6</td><td class="num">0.322</td><td><span class="pill fail">FAIL</span></td></tr>
+        <tr><td class="lbl">small N, large M</td><td class="num">10</td><td class="num">200</td><td class="lbl">N+M</td><td class="num">335.8</td><td class="num">0.562</td><td><span class="pill fail">FAIL</span></td></tr>
+        <tr><td class="lbl">compression + moment</td><td class="num">−300</td><td class="num">116</td><td class="lbl">N+M</td><td class="num">87.3</td><td class="num">0.144</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="lbl">crushing compression</td><td class="num">−2000</td><td class="num">116</td><td class="lbl">pure-compression</td><td class="num">−582.3</td><td class="num">0.000</td><td><span class="pill pass">PASS</span></td></tr>
+        <tr><td class="lbl">tiny load</td><td class="num">10</td><td class="num">5</td><td class="lbl">N+M</td><td class="num">12.1</td><td class="num">0.020</td><td><span class="pill pass">PASS</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The solver is continuous through N = 0. Sweeping the axial force from tension into compression at constant M lifts the neutral axis smoothly (75.5 → 376 mm) and bleeds off steel stress (192.6 → 6.4 MPa) with no jump or sign flip at the origin — which is exactly where the original broke.</p>
+
+  <p>The pure-tension row is worth knowing by heart for a different reason: <strong>N = 529, M = 0 gives w<sub>k</sub> = 0.288 mm, PASS</strong>. That is the case pictured on the green pill in the user guide, and it is the quickest way to demonstrate a passing verdict against the same section that fails under N+M.</p>
+
+  <h3>Parameter switches</h3>
+  <p>Each of these should move the answer in a direction you can predict. Most do; two don't.</p>
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Variation</th><th>s<sub>r,max</sub></th><th>Eq</th><th>w<sub>k</sub></th><th>Behaves as expected?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="lbl">baseline</td><td class="num">565</td><td class="lbl">7.11</td><td class="num">0.678</td><td>—</td></tr>
+        <tr><td class="lbl">plain bars (k₁ 0.8→1.6)</td><td class="num">993</td><td class="lbl">7.11</td><td class="num">1.193</td><td>Yes — worse bond, wider cracks</td></tr>
+        <tr><td class="lbl">bar ø 16→25</td><td class="num">432</td><td class="lbl">7.11</td><td class="num">0.213</td><td>Yes — more steel, σ<sub>s</sub> drops</td></tr>
+        <tr><td class="lbl">spacing 150→400</td><td class="num">651</td><td class="lbl">7.14</td><td class="num">2.092</td><td>Yes — and correctly switches equation</td></tr>
+        <tr><td class="lbl">E<sub>c</sub> auto (input 0)</td><td class="num">565</td><td class="lbl">7.11</td><td class="num">0.680</td><td>Yes</td></tr>
+        <tr><td class="lbl">short duration (k<sub>t</sub> .4→.6)</td><td class="num">565</td><td class="lbl">7.11</td><td class="num">0.670</td><td><span class="pill warn">floor</span></td></tr>
+        <tr><td class="lbl">creep φ = 2.0</td><td class="num">563</td><td class="lbl">7.11</td><td class="num">0.681</td><td>Yes — creep widens the crack <em>(fixed 17 Jul)</em></td></tr>
+        <tr><td class="lbl">f<sub>ck</sub> = 60 (&gt;50 branch)</td><td class="num">565</td><td class="lbl">7.11</td><td class="num">0.670</td><td><span class="pill warn">floor</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Short duration and f<sub>ck</sub> = 60 land on <em>exactly</em> 0.670 — they have hit the code's minimum-strain floor, 0.6σ<sub>s</sub>/E<sub>s</sub>. That is legitimate EC2 behaviour, but it means for this section those two inputs barely matter. Creep used to sit on that floor beside them, having moved w<sub>k</sub> the wrong way to get there. It no longer does — see defect 3.</p>
+</section>
+
+<section>
+  <h2>Defects — four fixed, two open</h2>
+  <p class="sub">Be honest about these when asked. The ones that mattered are closed; the rest you should be able to name.</p>
+
+  <div class="defect fixed">
+    <h4>1. Pure bending returned zero crack width <span class="pill pass">FIXED</span></h4>
+    <p>With <code>N = 0</code> the solver fell into pure-tension mode and computed σ<sub>s</sub> = N / A<sub>s</sub> = <strong>0</strong>, so w<sub>k</sub> = 0.000 mm and the check <em>passed</em>. A pure-bending member — the most common case there is — was silently reported as safe.</p>
+    <p>Cause: the neutral-axis solve was formulated around the load eccentricity <code>M/N</code>, undefined at N = 0. The bisection failed to bracket and degraded to the tension branch.</p>
+    <span class="repro">before   N=0, M=250  →  σ_s =   0.0 MPa,  w_k = 0.000 mm,  PASS
+after    N=0, M=250  →  σ_s = 415.1 MPa,  w_k = 0.724 mm,  FAIL</span>
+  </div>
+
+  <div class="defect fixed">
+    <h4>2. Compression yielded a negative crack width <span class="pill pass">FIXED</span></h4>
+    <p>Compressive N produced σ<sub>s</sub> = −87.3 MPa and w<sub>k</sub> = <strong>−0.163 mm</strong> — a negative crack width, which then satisfied the ≤ w<sub>max</sub> test. The form places no lower bound on N, so it was reachable.</p>
+    <p>Now the section is solved properly under compression (the neutral axis rises, steel stress drops), and where the steel goes into compression there is no crack to measure.</p>
+    <span class="repro">before   N=-300, M=116  →  σ_s = -87.3 MPa,  w_k = -0.163 mm
+after    N=-300, M=116  →  σ_s = +87.3 MPa,  w_k =  0.144 mm</span>
+  </div>
+
+  <div class="defect fixed">
+    <h4>The fix, in one line <span class="pill pass">APPLIED</span></h4>
+    <p>Both defects were the same root cause: dividing by N. The equilibrium condition <code>Mf(x)/Pf(x) = h/2 + M/N</code> was restated as</p>
+    <span class="repro">F(x) = M·Pf(x) + N·Qf(x) = 0</span>
+    <p style="margin-top:.6rem">— algebraically identical wherever the old form was valid, but defined at N = 0 (where it reduces to <code>Pf(x) = 0</code>, the textbook pure-bending neutral-axis condition) and correctly signed for N &lt; 0. A negative σ<sub>s</sub> now yields w<sub>k</sub> = 0 rather than a negative crack width. <strong>All seven benchmark quantities still reproduce exactly.</strong></p>
+  </div>
+
+  <div class="defect fixed">
+    <h4>5. Deleting a missing row raised <span class="pill pass">FIXED</span></h4>
+    <p><code>delete_results_from_crackWidth_table</code> passed <code>None</code> to <code>session.delete()</code> when an id wasn't found, raising <code>UnmappedInstanceError</code>, and counted it as deleted regardless. It now looks the row up first, skips a miss without counting it, and returns the true number removed — which is what the "Deleted <em>n</em> Files" toast reports. It was only ever reachable by deleting a row twice, which the UI does not offer.</p>
+  </div>
+
+  <div class="defect fixed">
+    <h4>3. The creep coefficient moved w<sub>k</sub> the wrong way <span class="pill pass">FIXED</span></h4>
+    <p>Creep should <em>increase</em> crack width. Setting φ = 2.0 <em>decreased</em> it, 0.678 → 0.670, and then φ stopped doing anything at all: every value from 0.5 upward returned exactly 0.670. The neutral axis never moved off 25.121 mm and σ<sub>s</sub> never moved off 395.658 MPa, whatever φ was set to.</p>
+    <p>Two faults, one symptom. <strong>Step 4</strong> solved the section with the raw E<sub>c</sub>, so φ never reached the cracked-section analysis. <strong>Step 7</strong> then fed it the creep-adjusted α<sub>e</sub> — but Eq 7.9 defines α<sub>e</sub> as E<sub>s</sub>/E<sub>cm</sub>, the <em>short-term</em> secant modulus. Creep enters Eq 7.9 through k<sub>t</sub> (0.4 sustained / 0.6 instantaneous) and through σ<sub>s</sub>, not through α<sub>e</sub>. So the only path φ had was a term that <em>subtracts</em>: a rising α<sub>e</sub> inflates (1 + α<sub>e</sub>ρ<sub>p,eff</sub>), shrinking the strain until it hit the 0.6σ<sub>s</sub>/E<sub>s</sub> floor and pinned there.</p>
+    <p>Now step 4 solves on E<sub>c,eff</sub> = E<sub>cm</sub>/(1 + φ) and step 7 uses the Eq 7.9 ratio. Creep reaches the section, deepens the neutral axis, and raises both σ<sub>s</sub> and the strain.</p>
+    <span class="repro">before   phi 0 -> 2:  x = 25.121 -> 25.121 mm,  sigma_s = 395.66 -> 395.66 MPa,  w_k = 0.678 -> 0.670  (fell, then inert)
+after    phi 0 -> 2:  x = 25.121 -> 35.044 mm,  sigma_s = 395.66 -> 396.98 MPa,  w_k = 0.678 -> 0.681  (rises)</span>
+    <p style="margin-top:.6rem"><strong>It did not move the benchmark.</strong> The old note here assumed it would, and that was wrong: at φ = 0, E<sub>c,eff</sub> = E<sub>cm</sub> and E<sub>s</sub>/E<sub>cm</sub> = E<sub>s</sub>/E<sub>c,eff</sub>, so both edits are algebraically inert. Every φ = 0 result in this document is bit-identical across the fix — the benchmark, the load sweep, and every parameter row but creep. There was never a decision to make about which was authoritative; the code answers it.</p>
+    <p><strong>What it does not buy you</strong>, and worth saying before someone reports it as a bug: w<sub>k</sub> still is not monotonic in φ for <em>every</em> section. w<sub>k</sub> = s<sub>r,max</sub> × ε, and EN 1992-1-1 ties s<sub>r,max</sub> to the neutral axis — Eq 7.14 is 1.3(h − x) outright, and Eq 7.11 runs through ρ<sub>p,eff</sub>, which h<sub>c,eff</sub> = min(2.5(h−d), (h−x)/3, h/2) sets. Creep deepens x, so both shrink the spacing. Across 600 randomised sections the strain now rises with φ every time, but on sections where the spacing loss outruns the strain gain — deep members with widely spaced bars, on Eq 7.14 — w<sub>k</sub> still eases off, by up to 10% at φ = 3. That is the code's geometry, not this implementation, and "fixing" it would mean departing from EN 1992-1-1.</p>
+  </div>
+
+  <div class="defect">
+    <h4>4. The <code>cracked</code> flag is computed and never used <span class="pill warn">OPEN — AND ODD</span></h4>
+    <p>Step 3 tests σ<sub>ct</sub> ≥ f<sub>ctm</sub> and stores the result as <code>cracked</code>, which nothing reads. The obvious fix — skip the check when uncracked — <strong>cannot be applied</strong>, because by that test the Wadi benchmark <em>is itself uncracked</em> (σ<sub>ct</sub> = 3.53 &lt; f<sub>ctm</sub> = 4.07) and yet the reference tool computes w<sub>k</sub> = 0.678 for it regardless.</p>
+    <p>So either the flag's threshold is wrong, or the reference tool deliberately checks uncracked sections too. Worth resolving before anyone leans on that column — it's the one open question about the engine's intent.</p>
+  </div>
+
+  <div class="defect">
+    <h4>6. A fresh database engine per interaction <span class="pill warn">OPEN — MINOR</span></h4>
+    <p>Each of the four call sites constructs <code>InteractionFile()</code> inline, and its <code>__init__</code> builds a <code>StartEngine()</code> — a new SQLAlchemy engine, plus a <code>create_all()</code> round-trip to the database — on every save, every delete and every grid refresh. Nothing holds a single engine for the life of the app.</p>
+    <p>Harmless in practice against a local SQLite file with one user, which is why it is filed as minor rather than fixed. It is still the wrong shape: one module-level instance would do. Name it before someone else finds it.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Packaging: the things that broke</h2>
+  <p class="sub">Worth knowing — each one cost a build cycle, and each will bite again</p>
+
+  <h3>Downloads silently cancelled</h3>
+  <p>pywebview ships <code>ALLOW_DOWNLOADS = False</code>, and the WebView2 backend cancels the download outright — no error, no console output, nothing reaching Python. The PDF export button looks broken but isn't. The fix has to go through <code>app.native.settings['ALLOW_DOWNLOADS'] = True</code> so it reaches the pywebview subprocess; setting it on <code>webview.settings</code> in the parent would not, because the window lives in the child.</p>
+
+  <h3>The database moves when frozen</h3>
+  <p>A PyInstaller build unpacks to <code>sys._MEIPASS</code>, a temp directory Windows wipes on exit, so the database cannot live there. It is written to <code>data\</code> beside <code>sys.executable</code> instead — the real on-disk location of the exe, not the temp unpack — which makes the app <strong>portable</strong>: copy the folder to a USB stick and the saved cases travel with it. Source checkouts still use <code>database\</code>.</p>
+
+  <h3>The schema was never created <span class="pill pass">FIXED</span></h3>
+  <p><code>StartEngine.create_table()</code> existed but was called from nowhere; the dev database happened to have the table already, so it worked on exactly one machine. Called from <code>__init__</code> since, and <code>create_all</code> is idempotent. Still true today — if anything it now runs rather too often (defect 6).</p>
+
+  <h3>Local modules silently missing from the bundle <span class="pill pass">AVOIDED</span></h3>
+  <p><code>collect_submodules()</code> runs in an isolated subprocess without your project root on <code>sys.path</code>, and returns an <strong>empty list</strong> for local, non-installed packages — no warning, nothing bundled, and a <code>ModuleNotFoundError</code> at runtime. <code>CrackWidthNiceGUI.spec</code> avoids it: local modules are picked up by following the imports from <code>main_niceGUI.py</code>, and <code>collect_all()</code> is used only for the three third-party packages that carry data files or hidden imports — <code>nicegui</code>, <code>webview</code> and <code>fpdf</code>. Recorded because the trap is still there if anyone reaches for <code>collect_submodules</code> again.</p>
+
+  <h3>A frozen exe cannot re-execute its own script <span class="pill warn">NEW</span></h3>
+  <p>NiceGUI's default "script mode" re-runs <code>sys.argv[0]</code> per client. In a frozen build <code>sys.argv[0]</code> is the exe, so <code>runpy</code> tries to parse a binary as Python and dies on <em>source code string cannot contain null bytes</em>. Passing <code>root=build_ui</code> — the function, uncalled — sidesteps the re-execution entirely. This is why all UI construction lives inside one function rather than at module level, and it is not a style choice.</p>
+</section>
+
+<section>
+  <h2>Build and run</h2>
+  <p class="sub">From the project root</p>
+  <pre><code># dev — browser tab at :8082, hot reload
+uv run python main_niceGUI.py
+
+# the engine's regression suite (pins the benchmark, guards defect 3)
+uv run pytest
+
+# regenerate the user guide PDF (docs/CrackWidth_User_Guide.pdf)
+uv run python build_user_guide.py
+
+# build the exe  (close any running instance first — locked DLLs)
+taskkill /F /IM CrackWidthNiceGUI.exe
+uv run pyinstaller CrackWidthNiceGUI.spec --noconfirm
+#   → dist\CrackWidthNiceGUI\CrackWidthNiceGUI.exe   (19 MB exe + _internal)</code></pre>
+  <p>The spec builds windowed (<code>console=False</code>), so a traceback in the packaged app goes nowhere you can see — run from source when you need one. <code>datas=[('docs','docs')]</code> bundles the reference diagram, the logos, the user guide and the changelog; the two documents are also copied to the top level of the dist folder, because <code>_internal\</code> is not a place users look.</p>
+  <p>Port <strong>8082</strong> is hard-coded in <code>ui.run()</code>. Nothing negotiates a free one, so a stale instance holding the port will stop the next launch.</p>
+
+  <h3>Tests</h3>
+  <p><code>tests/test_creep.py</code> is the only suite so far, and it covers the engine rather than the UI — which is the layering paying off again: no window, no server, no database, just the maths. It pins all six benchmark quantities and asserts the invariant the creep fix guarantees, that φ never reduces steel stress or mean strain, across 600 randomised sections. Reverting either half of that fix turns 370 of its 949 cases red, so it is worth keeping green.</p>
+</section>
+
+<footer>
+  Architecture re-checked 17 July 2026 against <code>main_niceGUI.py</code>, <code>CrackWidthNiceGUI.spec</code>, <code>InteractionFile.py</code> and <code>models.py</code>: three layers, two processes, 16 inputs → 22-field <code>report_result</code> → 26-column row (all counts verified against the code, not assumed). Defect 5 is closed; defect 6 is newly recorded. The engine was edited the same day — its first change since 13 July 2026 — to fix defect 3 (creep), in steps 4 and 7. Its verification was re-run rather than carried forward: the benchmark, the sweep through N = 0 and the parameter table all still stand, because the fix is algebraically inert at φ = 0. Only the creep row moved, 0.670 → 0.681, and in the right direction. Two defects remain open — neither silently wrong, both nameable.
+</footer>
+
+</div>
+
+</body>
+</html>
