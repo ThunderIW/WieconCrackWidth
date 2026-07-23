@@ -82,6 +82,8 @@ A short walkthrough of the app in action — **click to watch on YouTube**:
 
 ## Tech stack
 
+![Tech stack: NiceGUI (UI), pywebview (native window), SQLModel over SQLite (data), fpdf2 (PDF export), pendulum (dates), PyInstaller (packaging), uv (env/deps), Python 3.12+](docs/tech-stack.svg)
+
 | Area | Library |
 |---|---|
 | UI | NiceGUI |
