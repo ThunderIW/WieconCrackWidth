@@ -28,9 +28,6 @@ build_*.log
 database/*.db
 upload_data/*
 
-# Claude Code hook output
-.claude/hooks/*.log
-
 # OS
 Thumbs.db
 .DS_Store
