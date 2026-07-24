@@ -141,14 +141,22 @@ The engine in `WieconTools/crack_width_formula.py` is UI-independent:
 from WieconTools.crack_width_formula import crack_analyze
 
 result = crack_analyze(
-    section_width=1000, section_thickness=525, cover_to_bar_surface=40,
-    tension_face_bar_diameter=16, tension_face_bar_spacing=150,
-    opposite_face_bar_diameter=20, opposite_face_bar_spacing=150,
-    concrete_strength=50, concrete_modulus=34, steel_modulus=200,
-    creep_coeff=0.0, bar_type="ribbed", load_duration="long",
+    section_width=1000,
+    section_thickness=525,
+    cover_to_bar_surface=40,
+    tension_face_bar_diameter=16,
+    tension_face_bar_spacing=150,
+    opposite_face_bar_diameter=20,
+    opposite_face_bar_spacing=150,
+    concrete_strength=50,
+    concrete_modulus=34,
+    steel_modulus=200,
+    creep_coeff=0.0,
+    bar_type="ribbed",
+    load_duration="long",
 ).run(N_kN=529, M_kNm=116, w_max=0.30)
 
-print(result.wk, result.ok, result.mode)   # crack width, pass/fail, N+M vs pure-tension
+print(result.wk, result.ok, result.mode)  # crack width, pass/fail, N+M vs pure-tension
 ```
 
 `run()` returns a `report_result` dataclass with every intermediate quantity of the cl. 7.3.4 check.

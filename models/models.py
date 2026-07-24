@@ -1,5 +1,5 @@
 import sys
-from sqlmodel import Field, SQLModel,Relationship,create_engine
+from sqlmodel import Field, SQLModel, Relationship, create_engine
 from pathlib import Path
 from typing import Optional
 from datetime import datetime
@@ -21,8 +21,7 @@ def _database_dir() -> Path:
 DB_PATH = _database_dir() / "WieconDatabaseResult.db"
 
 
-
-class CrackWidthResultTable(SQLModel,table=True):
+class CrackWidthResultTable(SQLModel, table=True):
     # Guards against the class body running twice against the same metadata —
     # which happens if this module is ever imported under two names in one
     # process (a dev reloader or a multiprocessing spawn can do it). Without it
@@ -30,8 +29,8 @@ class CrackWidthResultTable(SQLModel,table=True):
     __table_args__ = {"extend_existing": True}
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    name:str=Field(index=True)
-    created_at:datetime=Field(default_factory=datetime.now)
+    name: str = Field(index=True)
+    created_at: datetime = Field(default_factory=datetime.now)
 
     # --- Inputs: crack_analyze() constructor ---
     section_width: float
@@ -63,7 +62,6 @@ class CrackWidthResultTable(SQLModel,table=True):
     rho_p_eff: float
 
 
-
 class StartEngine:
     def __init__(self):
         DB_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -73,7 +71,5 @@ class StartEngine:
         # create_all emits CREATE TABLE IF NOT EXISTS: safe on a populated DB.
         self.create_table()
 
-
     def create_table(self):
         SQLModel.metadata.create_all(self.engine)
-

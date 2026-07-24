@@ -74,6 +74,7 @@ KNOWN LIMITATIONS — read before trusting a number
       entering loads that yield the bars; the formulas will still return a number,
       and it will not mean anything.
 """
+
 import math
 from dataclasses import dataclass
 
@@ -88,28 +89,29 @@ class report_result:
 
     Mutable: nothing currently reshapes one, but nothing stops it either.
     """
-    As_b: float            # tension-face steel area [mm^2]
-    As_t: float            # opposite-face steel area [mm^2]
-    d: float               # effective depth [mm]
-    fctm: float            # mean tensile strength [MPa]
-    Ec_GPa: float          # concrete modulus [GPa]
-    alpha_e: float         # modular ratio Es / Ec,eff
-    sigma_ct: float        # concrete tensile stress [MPa]
-    cracked: bool          # sigma_ct >= fctm
-    mode: str              # "N+M" or "pure-tension"
-    x: float               # neutral-axis depth [mm]
-    sigma_s: float         # tension-face steel stress [MPa]
-    sigma_s_top: float     # opposite-face steel stress [MPa]
-    hc_eff: float          # effective tension-zone height [mm]
-    Ac_eff: float          # effective concrete area [mm^2]
-    rho_p_eff: float       # effective reinforcement ratio
-    k2: float              # strain-distribution coefficient
-    esm_minus_ecm: float   # mean strain difference
-    sr_max: float          # maximum crack spacing [mm]
-    sr_equation: str       # "Eq 7.11" or "Eq 7.14"
-    wk: float              # crack width [mm]
-    w_max: float           # crack-width limit [mm]
-    ok: bool               # wk <= w_max
+
+    As_b: float  # tension-face steel area [mm^2]
+    As_t: float  # opposite-face steel area [mm^2]
+    d: float  # effective depth [mm]
+    fctm: float  # mean tensile strength [MPa]
+    Ec_GPa: float  # concrete modulus [GPa]
+    alpha_e: float  # modular ratio Es / Ec,eff
+    sigma_ct: float  # concrete tensile stress [MPa]
+    cracked: bool  # sigma_ct >= fctm
+    mode: str  # "N+M" or "pure-tension"
+    x: float  # neutral-axis depth [mm]
+    sigma_s: float  # tension-face steel stress [MPa]
+    sigma_s_top: float  # opposite-face steel stress [MPa]
+    hc_eff: float  # effective tension-zone height [mm]
+    Ac_eff: float  # effective concrete area [mm^2]
+    rho_p_eff: float  # effective reinforcement ratio
+    k2: float  # strain-distribution coefficient
+    esm_minus_ecm: float  # mean strain difference
+    sr_max: float  # maximum crack spacing [mm]
+    sr_equation: str  # "Eq 7.11" or "Eq 7.14"
+    wk: float  # crack width [mm]
+    w_max: float  # crack-width limit [mm]
+    ok: bool  # wk <= w_max
 
 
 class crack_analyze:
@@ -124,23 +126,24 @@ class crack_analyze:
         mid     = section.run(300, 80)        # load case 2
     """
 
-    def __init__(self,
-                 section_width,
-                 section_thickness,
-                 cover_to_bar_surface,
-                 opposite_face_bar_diameter,
-                 opposite_face_bar_spacing,
-                 tension_face_bar_diameter,
-                 tension_face_bar_spacing,
-                 concrete_strength,
-                 concrete_modulus,
-                 steel_modulus,
-                 creep_coeff=0.0,
-                 bar_type='ribbed',
-                 load_duration='long',
-                 k3=3.4,
-                 k4=0.425
-                 ):
+    def __init__(
+        self,
+        section_width,
+        section_thickness,
+        cover_to_bar_surface,
+        opposite_face_bar_diameter,
+        opposite_face_bar_spacing,
+        tension_face_bar_diameter,
+        tension_face_bar_spacing,
+        concrete_strength,
+        concrete_modulus,
+        steel_modulus,
+        creep_coeff=0.0,
+        bar_type="ribbed",
+        load_duration="long",
+        k3=3.4,
+        k4=0.425,
+    ):
         """Define the section. Everything is per section width b.
 
         WARNING: the OPPOSITE face comes before the tension face in this signature.
@@ -191,70 +194,64 @@ class crack_analyze:
         :param k4: coefficient on the Ø/rho term of Eq 7.11. Recommended 0.425.
         """
 
-        self.b=section_width
-        self.h=section_thickness
-        self.c=cover_to_bar_surface
-        self.dia_t=opposite_face_bar_diameter
-        self.spac_t=opposite_face_bar_spacing
-        self.dia_b=tension_face_bar_diameter
-        self.spac_b=tension_face_bar_spacing
-        self.fck=concrete_strength
-        self.Ec_input=concrete_modulus
-        self.Es_gpa=steel_modulus
+        self.b = section_width
+        self.h = section_thickness
+        self.c = cover_to_bar_surface
+        self.dia_t = opposite_face_bar_diameter
+        self.spac_t = opposite_face_bar_spacing
+        self.dia_b = tension_face_bar_diameter
+        self.spac_b = tension_face_bar_spacing
+        self.fck = concrete_strength
+        self.Ec_input = concrete_modulus
+        self.Es_gpa = steel_modulus
         # Creep is strain under SUSTAINED stress: a short-duration check is a
         # first loading, where no creep has had time to develop. Gating phi here
         # (not at the usage sites) keeps steps 2 and 4 seeing the same concrete.
-        self.phi=creep_coeff if load_duration == 'long' else 0.0
-        self.bar_type=bar_type
-        self.load_duration=load_duration
-        self.k3=k3
-        self.k4=k4
+        self.phi = creep_coeff if load_duration == "long" else 0.0
+        self.bar_type = bar_type
+        self.load_duration = load_duration
+        self.k3 = k3
+        self.k4 = k4
 
-
-        #Here are some Derived geometry, used in later calculations
-        self.d1=self.c + self.dia_t/2
-        self.d2= self.h-self.c - self.dia_b/2
-        self.d=self.d2
-
-
+        # Here are some Derived geometry, used in later calculations
+        self.d1 = self.c + self.dia_t / 2
+        self.d2 = self.h - self.c - self.dia_b / 2
+        self.d = self.d2
 
     def step_1_steel_area(self):
         """Here we return As_b-> Tension-face and As_t->Opposite-face steel area
         in mm^2 per section width b."""
-        As_b=math.pi /4 * self.dia_b**2 * (self.b / self.spac_b)
-        As_t=math.pi /4 * self.dia_t**2 * (self.b / self.spac_t)
-        return As_b,As_t
-
+        As_b = math.pi / 4 * self.dia_b**2 * (self.b / self.spac_b)
+        As_t = math.pi / 4 * self.dia_t**2 * (self.b / self.spac_t)
+        return As_b, As_t
 
     def step_2_material_properties(self):
 
-        #Mean tensile Strength
-        if self.fck <=50:
-            fctm = 0.30 * self.fck ** (2/3)
+        # Mean tensile Strength
+        if self.fck <= 50:
+            fctm = 0.30 * self.fck ** (2 / 3)
         else:
-            fctm = 2.12 * math.log(1+(self.fck + 8)/10)
+            fctm = 2.12 * math.log(1 + (self.fck + 8) / 10)
 
-        #Concrete modulus
-        if self.Ec_input >0:
+        # Concrete modulus
+        if self.Ec_input > 0:
             Ec = self.Ec_input * 1000
         else:
-            Ec = 22 * ((self.fck + 8)/10) ** 0.3 * 1000
+            Ec = 22 * ((self.fck + 8) / 10) ** 0.3 * 1000
 
-
-        #Creep-adjusted modulus and modular ratio
-        Ec_eff = Ec/(1+self.phi)
+        # Creep-adjusted modulus and modular ratio
+        Ec_eff = Ec / (1 + self.phi)
         Es = self.Es_gpa * 1000
         alpha_e = Es / Ec_eff
 
-        return fctm,Ec,Es,alpha_e
+        return fctm, Ec, Es, alpha_e
 
-    def step_3_cracking_check(self,N_kN, M_kNm):
-        fctm,*_=self.step_2_material_properties()
+    def step_3_cracking_check(self, N_kN, M_kNm):
+        fctm, *_ = self.step_2_material_properties()
         N = N_kN * 1e3
         M = M_kNm * 1e6
-        sigma_ct= N/ (self.b * self.h) + M / (self.b * self.h**2/6)
-        return sigma_ct, sigma_ct >=fctm
-
+        sigma_ct = N / (self.b * self.h) + M / (self.b * self.h**2 / 6)
+        return sigma_ct, sigma_ct >= fctm
 
     @staticmethod
     def _bracket_and_bisect(F, hi_limit, samples=400):
@@ -281,8 +278,7 @@ class crack_analyze:
             x, f_lo = hi, f_hi
         return None
 
-
-    def step_4_steel_stress(self,N_kN, M_kNm):
+    def step_4_steel_stress(self, N_kN, M_kNm):
         As_b, As_t = self.step_1_steel_area()
         _, Ec, _, _ = self.step_2_material_properties()
         Es = self.Es_gpa * 1000
@@ -304,13 +300,13 @@ class crack_analyze:
 
         def Pf(x):
             """Net axial force on the cracked section, per unit curvature."""
-            return Ec_eff * b * x ** 2 / 2 + Es * (As_t * (x - d1) + As_b * (x - d2))
+            return Ec_eff * b * x**2 / 2 + Es * (As_t * (x - d1) + As_b * (x - d2))
 
         def Qf(x):
             """Moment of those same forces about mid-depth, per unit curvature."""
-            return (Es * (As_t * (d1 - x) * (d1 - h / 2)
-                          + As_b * (d2 - x) * (d2 - h / 2))
-                    + Ec_eff * b * x ** 2 / 2 * (h / 2 - x / 3))
+            return Es * (
+                As_t * (d1 - x) * (d1 - h / 2) + As_b * (d2 - x) * (d2 - h / 2)
+            ) + Ec_eff * b * x**2 / 2 * (h / 2 - x / 3)
 
         def F(x):
             # Equilibrium: the internal and external resultants must be collinear.
@@ -326,20 +322,25 @@ class crack_analyze:
             # (only the bar layers carry the load) or wholly in compression, in
             # which case sigma_s comes out negative and step 9 reports no crack.
             sigma_s = N / (As_t + As_b)
-            return {"mode": "pure-tension" if N >= 0 else "pure-compression",
-                    "x": 0.0, "sigma_s": sigma_s, "sigma_s_top": sigma_s}
+            return {
+                "mode": "pure-tension" if N >= 0 else "pure-compression",
+                "x": 0.0,
+                "sigma_s": sigma_s,
+                "sigma_s_top": sigma_s,
+            }
 
         # Curvature from whichever equilibrium equation is better conditioned.
         p, q = Pf(x), Qf(x)
         kappa = M / q if abs(q) >= abs(p) else -N / p
 
-        return {"mode": "N+M", "x": x,
-                "sigma_s": Es * kappa * (d2 - x),
-                "sigma_s_top": Es * kappa * (d1 - x)}
+        return {
+            "mode": "N+M",
+            "x": x,
+            "sigma_s": Es * kappa * (d2 - x),
+            "sigma_s_top": Es * kappa * (d1 - x),
+        }
 
-
-
-    def step_5_6_effective_area(self,mode,x):
+    def step_5_6_effective_area(self, mode, x):
         As_b, _ = self.step_1_steel_area()
         h, c, d = self.h, self.c, self.d
 
@@ -347,23 +348,20 @@ class crack_analyze:
         # no-compression-zone modes. Keyed on x, not the label, so pure-compression
         # follows the same path.
         if x <= 0:
-            hc_eff=min(2.5*(c+self.dia_b/2),h/2)
-            k2=1.0
+            hc_eff = min(2.5 * (c + self.dia_b / 2), h / 2)
+            k2 = 1.0
 
         else:
-            hc_eff = min(2.5 * (h-d),(h-x)/3,h/2)
-            e1=h-x
-            e2 =(h-hc_eff)-x
+            hc_eff = min(2.5 * (h - d), (h - x) / 3, h / 2)
+            e1 = h - x
+            e2 = (h - hc_eff) - x
             k2 = max(0.5, min(1.0, (e1 + e2) / (2 * e1))) if e1 > 0 else 0.5
 
         Ac_eff = self.b * hc_eff
         rho = As_b / Ac_eff
         return hc_eff, Ac_eff, rho, k2
 
-
-
-
-    def step_7_mean_stain(self,sigma_s, rho):
+    def step_7_mean_stain(self, sigma_s, rho):
 
         fctm, Ec, _, _ = self.step_2_material_properties()
         Es = self.Es_gpa * 1000
@@ -385,10 +383,9 @@ class crack_analyze:
         esm = (sigma_s - kt * fctm / rho * (1 + alpha_e * rho)) / Es
         # Floored at zero as well as at 0.6*sigma_s/Es: steel in compression gives
         # a negative sigma_s, and a negative mean strain is not a crack.
-        return max(esm, 0.6*sigma_s/Es, 0.0)
+        return max(esm, 0.6 * sigma_s / Es, 0.0)
 
-
-    def step_8_crack_spacing(self,mode,x,rho,k2):
+    def step_8_crack_spacing(self, mode, x, rho, k2):
         k1 = 0.8 if self.bar_type == "ribbed" else 1.6
         cond = 5 * (self.c + self.dia_b / 2)
         if self.spac_b <= cond or x <= 0:
@@ -396,8 +393,7 @@ class crack_analyze:
             return sr, "Eq 7.11"
         return 1.3 * (self.h - x), "Eq 7.14"
 
-
-    def step_9_crack_width(self,sr_max,esm,sigma_s):
+    def step_9_crack_width(self, sr_max, esm, sigma_s):
         # Steel in compression cannot open a crack. Without this the check reports
         # a negative w_k, which then silently satisfies w_k <= w_max.
         if sigma_s <= 0:
@@ -407,7 +403,7 @@ class crack_analyze:
     def run(self, N_kN, M_kNm, w_max=0.30):
         """Runs all steps in order and returns every result as a report_result."""
         As_b, As_t = self.step_1_steel_area()
-        fctm, Ec, Es, alpha_e = self.step_2_material_properties()
+        fctm, Ec, _Es, alpha_e = self.step_2_material_properties()
         sigma_ct, cracked = self.step_3_cracking_check(N_kN, M_kNm)
         s4 = self.step_4_steel_stress(N_kN, M_kNm)
         hc_eff, Ac_eff, rho, k2 = self.step_5_6_effective_area(s4["mode"], s4["x"])
@@ -416,18 +412,29 @@ class crack_analyze:
         wk = self.step_9_crack_width(sr_max, esm, s4["sigma_s"])
 
         return report_result(
-            As_b=As_b, As_t=As_t, d=self.d,
-            fctm=fctm, Ec_GPa=Ec / 1000, alpha_e=alpha_e,
-            sigma_ct=sigma_ct, cracked=cracked,
-            mode=s4["mode"], x=s4["x"],
-            sigma_s=s4["sigma_s"], sigma_s_top=s4["sigma_s_top"],
-            hc_eff=hc_eff, Ac_eff=Ac_eff, rho_p_eff=rho, k2=k2,
+            As_b=As_b,
+            As_t=As_t,
+            d=self.d,
+            fctm=fctm,
+            Ec_GPa=Ec / 1000,
+            alpha_e=alpha_e,
+            sigma_ct=sigma_ct,
+            cracked=cracked,
+            mode=s4["mode"],
+            x=s4["x"],
+            sigma_s=s4["sigma_s"],
+            sigma_s_top=s4["sigma_s_top"],
+            hc_eff=hc_eff,
+            Ac_eff=Ac_eff,
+            rho_p_eff=rho,
+            k2=k2,
             esm_minus_ecm=esm,
-            sr_max=sr_max, sr_equation=sr_eq,
-            wk=wk, w_max=w_max, ok=wk <= w_max,
+            sr_max=sr_max,
+            sr_equation=sr_eq,
+            wk=wk,
+            w_max=w_max,
+            ok=wk <= w_max,
         )
-
-
 
     def report(self, N_kN, M_kNm, w_max=0.30):
         """Prints a readable summary of the full check."""
@@ -442,16 +449,18 @@ class crack_analyze:
         print(f"  Effective depth d     {r.d:9.1f} mm")
         print(f"  f_ctm                 {r.fctm:9.2f} MPa")
         print(f"  Modular ratio a_e     {r.alpha_e:9.2f}")
-        print(f"  sigma_ct              {r.sigma_ct:9.2f} MPa"
-              f"   cracked: {'yes' if r.cracked else 'no'}")
+        print(
+            f"  sigma_ct              {r.sigma_ct:9.2f} MPa"
+            f"   cracked: {'yes' if r.cracked else 'no'}"
+        )
         print(f"  Mode                  {r.mode:>9}")
         if r.mode != "pure-tension":
             print(f"  Neutral axis x        {r.x:9.1f} mm")
         print(f"  sigma_s tension face  {r.sigma_s:9.1f} MPa")
         print(f"  h_c,eff               {r.hc_eff:9.1f} mm")
-        print(f"  rho_p,eff             {r.rho_p_eff*100:9.2f} %")
+        print(f"  rho_p,eff             {r.rho_p_eff * 100:9.2f} %")
         print(f"  k2                    {r.k2:9.2f}")
-        print(f"  esm - ecm             {r.esm_minus_ecm*1e3:9.3f} x10^-3")
+        print(f"  esm - ecm             {r.esm_minus_ecm * 1e3:9.3f} x10^-3")
         print(f"  s_r,max               {r.sr_max:9.0f} mm ({r.sr_equation})")
         print("-" * 56)
         print(f"  CRACK WIDTH w_k       {r.wk:9.3f} mm")
@@ -459,7 +468,6 @@ class crack_analyze:
         print(f"  VERDICT               {'PASS' if r.ok else 'FAIL':>9}")
         print("=" * 56)
         return r
-
 
 
 """
@@ -482,29 +490,3 @@ if __name__ == "__main__":
     #           rho 1.12 %, s_r,max 565 mm (Eq 7.11), w_k 0.678 mm -> FAIL
 
 """
-
-
-
-
-
-
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

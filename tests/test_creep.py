@@ -16,6 +16,7 @@ What the fix guarantees, and what it deliberately does not:
 
 Run:  .venv/Scripts/python -m pytest
 """
+
 import random
 
 import pytest
@@ -24,15 +25,21 @@ from WieconTools.crack_width_formula import crack_analyze
 
 # The Wadi benchmark from the engine's own docstring.
 BENCH = dict(
-    section_width=1000, section_thickness=525, cover_to_bar_surface=40,
-    opposite_face_bar_diameter=20, opposite_face_bar_spacing=150,
-    tension_face_bar_diameter=16, tension_face_bar_spacing=150,
-    concrete_strength=50, concrete_modulus=34, steel_modulus=200,
+    section_width=1000,
+    section_thickness=525,
+    cover_to_bar_surface=40,
+    opposite_face_bar_diameter=20,
+    opposite_face_bar_spacing=150,
+    tension_face_bar_diameter=16,
+    tension_face_bar_spacing=150,
+    concrete_strength=50,
+    concrete_modulus=34,
+    steel_modulus=200,
 )
 
-PHIS = [i * 0.125 for i in range(25)]        # 0.0 .. 3.0
-SERVICE_SIGMA = 50.0                          # MPa — below this the tension face is
-                                              # barely stressed and there is no crack
+PHIS = [i * 0.125 for i in range(25)]  # 0.0 .. 3.0
+SERVICE_SIGMA = 50.0  # MPa — below this the tension face is
+# barely stressed and there is no crack
 
 
 def analyse(phi=0.0, N=529.0, M=116.0, **overrides):
@@ -86,14 +93,18 @@ CRACKED = [
 
 # --- the benchmark must not move -----------------------------------------
 
-@pytest.mark.parametrize("field, expected, tol", [
-    ("alpha_e",   5.88,   0.01),
-    ("x",        25.1,    0.05),
-    ("sigma_s", 395.7,    0.05),
-    ("rho_p_eff", 0.0112, 0.0001),
-    ("sr_max",  565.0,    0.5),
-    ("wk",        0.678,  0.0005),
-])
+
+@pytest.mark.parametrize(
+    "field, expected, tol",
+    [
+        ("alpha_e", 5.88, 0.01),
+        ("x", 25.1, 0.05),
+        ("sigma_s", 395.7, 0.05),
+        ("rho_p_eff", 0.0112, 0.0001),
+        ("sr_max", 565.0, 0.5),
+        ("wk", 0.678, 0.0005),
+    ],
+)
 def test_benchmark_reproduces_reference_tool(field, expected, tol):
     """The creep fix is inert at phi=0, so the Wadi benchmark must be untouched."""
     assert getattr(analyse(), field) == pytest.approx(expected, abs=tol)
@@ -104,6 +115,7 @@ def test_benchmark_verdict_is_fail():
 
 
 # --- the defect itself ----------------------------------------------------
+
 
 @pytest.mark.parametrize("field", ["x", "sigma_s", "esm_minus_ecm"])
 def test_creep_reaches_the_section_solve(field):
@@ -142,6 +154,7 @@ def test_short_duration_changes_nothing_but_the_creep_gate(phi):
 
 
 # --- the invariant, over randomised sections ------------------------------
+
 
 @pytest.mark.parametrize("sweep", CRACKED)
 def test_steel_stress_never_falls_with_creep(sweep):
