@@ -6,7 +6,6 @@ __pycache__/
 
 # Secrets
 .env
-!.env.example
 
 # Virtual environment
 .venv/
