@@ -28,7 +28,7 @@ class CrackWidthResultTable(SQLModel, table=True):
     # the second pass raises "Table is already defined for this MetaData".
     __table_args__ = {"extend_existing": True}
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     name: str = Field(index=True)
     created_at: datetime = Field(default_factory=datetime.now)
 
