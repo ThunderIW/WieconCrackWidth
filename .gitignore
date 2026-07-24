@@ -4,6 +4,10 @@ __pycache__/
 *.egg-info/
 .pytest_cache/
 
+# Secrets
+.env
+!.env.example
+
 # Virtual environment
 .venv/
 venv/
@@ -23,6 +27,9 @@ build_*.log
 # Databases / runtime data
 database/*.db
 upload_data/*
+
+# Claude Code hook output
+.claude/hooks/*.log
 
 # OS
 Thumbs.db
