@@ -110,6 +110,9 @@ import time puts NiceGUI into script mode, which cannot work in a frozen exe.
 
 ## Git commits
 
+Commit when asked, but never push. Leave commits local for the user to review and push
+themselves — do not run `git push`, including to a feature branch.
+
 Do not add authorship or attribution trailers to commits. No `Co-Authored-By: Claude`,
 no `Claude-Session:` line, no "Generated with Claude Code" footer — the commit message is
 the message and nothing else. This applies to PR bodies too.
