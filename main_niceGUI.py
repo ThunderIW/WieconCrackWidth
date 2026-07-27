@@ -974,6 +974,15 @@ def build_ui() -> None:
             ui.icon("engineering").classes("text-5xl text-primary")
             ui.label("Crack Width Calculator").classes("text-lg font-bold")
             ui.label("EN 1992-1-1 cl. 7.3.4").classes("text-sm opacity-70")
+
+            with ui.row().classes(
+                "items-center gap-2 w-full rounded-borders bg-orange-2 "
+                "text-orange-10 px-3 py-2"
+            ):
+                ui.icon("warning").classes("text-lg")
+                ui.label("Valid for slabs only — not beams or columns").classes(
+                    "text-sm"
+                )
             ui.separator()
             with ui.column().classes("items-center gap-0"):
                 ui.label("Developed by").classes("text-xs uppercase opacity-60")
