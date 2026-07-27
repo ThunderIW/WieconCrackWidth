@@ -235,7 +235,10 @@ def build():
         pdf,
         "",
         "This app calculates the characteristic crack width w_k of a reinforced "
-        "concrete section and checks it against a limit.",
+        "concrete section and checks it against a limit. It is valid for slabs "
+        "only - not beams or columns: the check assumes a slab-type section (a "
+        "rectangular strip with one bar layer per face), so beam or column "
+        "dimensions return a crack width that does not apply to them.",
     )
 
     # --- 1. Launch -----------------------------------------------------------

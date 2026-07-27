@@ -4,6 +4,8 @@ A desktop application that calculates the characteristic crack width **`w_k`** o
 
 Built with [NiceGUI](https://nicegui.io/) + [pywebview](https://pywebview.flowrl.com/) as a native, portable Windows app — results are stored in a local SQLite database and can be exported to PDF.
 
+> **Valid for slabs only — not beams or columns.** The check assumes a slab-type section (a rectangular strip with one bar layer per face); beam or column dimensions return a crack width that does not apply to them.
+
 > Illustrated end-user instructions ship with the app as `docs/CrackWidth_User_Guide.pdf`.
 
 ---
@@ -21,6 +23,7 @@ A short walkthrough of the app in action — **click to watch on YouTube**:
 ## Features
 
 - **Crack-width check to EN 1992-1-1 cl. 7.3.4** — computes `w_k`, steel stress `σ_s`, crack spacing `s_r,max`, effective reinforcement ratio `ρ_p,eff`, and a PASS/FAIL verdict against `w_max`.
+- **Stated scope** — slabs only; the Credits dialog says so on screen, so the limitation is visible at the point of use rather than only in the documentation.
 - **Live result, no Calculate button** — the check re-runs as you type (~164 µs, so it is imperceptible) and a colour-coded badge shows the verdict as a full comparison: `w_k = 0.678 mm > w_max = 0.300 mm (Not Okay)`.
 - **Guided input** — grouped panels for Geometry, Reinforcement, Materials and Loads, with a live summary of inputs.
 - **Save & manage results** — name and store each check in a local database; browse, view details, and delete from an AG Grid table.

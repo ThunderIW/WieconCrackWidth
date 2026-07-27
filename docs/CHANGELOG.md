@@ -9,6 +9,20 @@ application in full, rather than as a diff. Every release after it — starting 
 
 ---
 
+## [2.1.8] — 2026-07-27
+
+### Added
+
+- **A scope warning in the Credits dialog.** The dialog now states that the check is
+  valid for slabs only — not beams or columns. The calculation has always assumed a
+  slab-type section, but nothing said so on screen, and entering beam or column
+  dimensions returns a plausible-looking crack width that does not apply to them.
+
+> **Results are unaffected.** This release changes text on screen only; no calculation
+> behaviour changed.
+
+---
+
 ## [2.1.7] — 2026-07-21
 
 ### Added
